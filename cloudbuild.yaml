@@ -5,7 +5,7 @@ substitutions:
 
 steps:
   - id: build
-    name: 'gcr.io/cloud-builders/docker'
+    name: 'gcr.io/cloud-builders'
     entrypoint: bash
     args:
       - -c
