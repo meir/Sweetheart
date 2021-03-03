@@ -21,7 +21,7 @@ func Sweetheart() {
 	sweetheart.Commandeer.Start(sweetheart.Session)
 
 	sweetheart.Commandeer.Apply("version", func(session *discordgo.Session, user *discordgo.User, command string, arguments []string, raw *discordgo.Message) bool {
-		session.ChannelMessageSend(raw.ChannelID, fmt.Sprintf("Running Sweetheart VH%v", os.Getenv("VERSION")))
+		session.ChannelMessageSend(raw.ChannelID, fmt.Sprintf("Running Sweetheart VH-%v", os.Getenv("VERSION")))
 		return true
 	}, commandeer.Arguments{Any: true})
 
