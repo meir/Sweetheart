@@ -11,12 +11,10 @@ func Ready(session *discordgo.Session, ready *discordgo.Ready) {
 }
 
 func JoinedGuild(session *discordgo.Session, guild *discordgo.GuildCreate) {
-	fmt.Println(len(session.State.Guilds), "servers")
 	updateStatus(session)
 }
 
 func LeftGuild(session *discordgo.Session, guild *discordgo.GuildDelete) {
-	fmt.Println(len(session.State.Guilds), "servers")
 	updateStatus(session)
 }
 
