@@ -31,9 +31,17 @@ func Sweetheart() {
 		panic(err)
 	}
 
+	activity := &discordgo.Activity{
+		Name: "OHOHOHOHOHOHOHO",
+		Type: discordgo.ActivityTypeCustom,
+	}
+
 	sweetheart.UpdateStatusComplex(discordgo.UpdateStatusData{
 		AFK:    false,
 		Status: "OHOHOHOHOHOHOHO",
+		Activities: []*discordgo.Activity{
+			activity,
+		},
 	})
 
 	println("Sweetheart is now running.  Press CTRL-C to exit.")
