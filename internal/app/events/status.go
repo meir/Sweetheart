@@ -14,7 +14,7 @@ func JoinedGuild(session *discordgo.Session, guild *discordgo.GuildCreate) {
 	updateStatus(session)
 }
 
-func LeftGuild(session *discordgo.Session, guild *discordgo.GuildCreate) {
+func LeftGuild(session *discordgo.Session, guild *discordgo.GuildDelete) {
 	updateStatus(session)
 }
 
