@@ -19,7 +19,7 @@ func Sweetheart() {
 		panic(err)
 	}
 
-	sweetheart.Identify.Intents = discordgo.IntentsAll
+	sweetheart.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuilds
 	sweetheart.Commandeer.Start(sweetheart.Session)
 
 	sweetheart.Commandeer.Apply("version", func(meta commandeer.Meta, command string, arguments []string) bool {
