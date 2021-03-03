@@ -1,4 +1,4 @@
-package bot
+package settings
 
 import "os"
 
