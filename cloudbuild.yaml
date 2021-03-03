@@ -1,0 +1,17 @@
+timeout: 7200s
+
+substitutions:
+  PROJECT_ID: "flamingo-302814"
+
+steps:
+  - id: build
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        set -xeou pipefail
+        
+        /usr/bin/docker build --tag gcr.io/${PROJECT_ID}/sweetheart:$SHORT_SHA --build-arg VERSION=$SHORT_SHA .
+        
+        gcloud builds submit --tag gcr.io/${PROJECT_ID}/sweetheart:$SHORT_SHA
