@@ -19,6 +19,7 @@ func LeftGuild(session *discordgo.Session, guild *discordgo.GuildDelete) {
 }
 
 func updateStatus(session *discordgo.Session) {
+	fmt.Println(len(session.State.Guilds), "servers")
 	activity := &discordgo.Activity{
 		Name: fmt.Sprintf("%v servers", len(session.State.Guilds)),
 		Type: discordgo.ActivityTypeListening,
