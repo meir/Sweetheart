@@ -2,6 +2,7 @@ package bot
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
@@ -19,7 +20,7 @@ func NewBot(settings map[BotSetting]string) (*DiscordBot, error) {
 		return nil, fmt.Errorf("requires bot token in settings")
 	}
 
-	c, err := discordgo.New(fmt.Sprintf("Bot %v", settings[TOKEN]))
+	c, err := discordgo.New(fmt.Sprintf("Bot %v", strings.ReplaceAll(settings[TOKEN], "\n", "")))
 	if err != nil {
 		return nil, err
 	}
