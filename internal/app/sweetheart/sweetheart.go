@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/meir/Sweetheart/internal/app/events"
 	"github.com/meir/Sweetheart/internal/pkg/bot"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
@@ -26,23 +27,12 @@ func Sweetheart() {
 		return true
 	}, commandeer.Arguments{Any: true})
 
+	sweetheart.AddHandler(events.Ready)
+
 	err = sweetheart.Open()
 	if err != nil {
 		panic(err)
 	}
-
-	activity := &discordgo.Activity{
-		Name: "OHOHOHOHOHOHOHO",
-		Type: discordgo.ActivityTypeCustom,
-	}
-
-	sweetheart.UpdateStatusComplex(discordgo.UpdateStatusData{
-		AFK:    false,
-		Status: "OHOHOHOHOHOHOHO",
-		Activities: []*discordgo.Activity{
-			activity,
-		},
-	})
 
 	println("Sweetheart is now running.  Press CTRL-C to exit.")
 	sc := make(chan os.Signal, 1)
