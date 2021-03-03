@@ -8,7 +8,7 @@ import (
 
 func Ready(discord *discordgo.Session, ready *discordgo.Ready) {
 	activity := &discordgo.Activity{
-		Name: fmt.Sprintf("%s servers", discord.State.Guilds),
+		Name: fmt.Sprintf("%v servers", len(discord.State.Guilds)),
 		Type: discordgo.ActivityTypeListening,
 	}
 
