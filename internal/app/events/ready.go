@@ -1,10 +1,14 @@
 package events
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"fmt"
+
+	"github.com/bwmarrin/discordgo"
+)
 
 func Ready(discord *discordgo.Session, ready *discordgo.Ready) {
 	activity := &discordgo.Activity{
-		Name: "OHOHOHOHOHOHOHO",
+		Name: fmt.Sprintf("%s servers", discord.State.Guilds),
 		Type: discordgo.ActivityTypeListening,
 	}
 
