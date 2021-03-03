@@ -1,15 +1,14 @@
 package sweetheart
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/meir/Sweetheart/internal/app/commands"
 	"github.com/meir/Sweetheart/internal/app/events"
 	"github.com/meir/Sweetheart/internal/pkg/bot"
-	"github.com/meir/Sweetheart/internal/pkg/commandeer"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
@@ -20,13 +19,10 @@ func Sweetheart() {
 	}
 
 	sweetheart.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuilds
-	sweetheart.Commandeer.Start(sweetheart.Session)
+	sweetheart.Commandeer.Start(sweetheart.Session) // initialize commandeer
 
-	sweetheart.Commandeer.Apply("version", func(meta commandeer.Meta, command string, arguments []string) bool {
-		meta.Session.ChannelMessageSend(meta.Message.ChannelID, fmt.Sprintf("Running Sweetheart VH-%v", meta.Settings[settings.VERSION]))
-		return true
-	}, commandeer.Arguments{Any: true})
-
+	// initialize commands and event listeners
+	commands.Initialize(sweetheart)
 	events.Initialize(sweetheart)
 
 	err = sweetheart.Open()
@@ -34,7 +30,7 @@ func Sweetheart() {
 		panic(err)
 	}
 
-	println("Sweetheart is now running.  Press CTRL-C to exit.")
+	// wait for kill signal
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	<-sc
