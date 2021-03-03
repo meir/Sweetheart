@@ -27,7 +27,7 @@ func Sweetheart() {
 		return true
 	}, commandeer.Arguments{Any: true})
 
-	sweetheart.AddHandler(events.Ready)
+	events.Initialize(sweetheart)
 
 	err = sweetheart.Open()
 	if err != nil {
