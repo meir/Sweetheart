@@ -24,4 +24,4 @@ steps:
         
         gcloud container clusters get-credentials "flamingo-master" --zone "europe-west4-a"
         
-        kubectl rollout restart deployment sweetheart -n sweetheart
+        kubectl rollout restart deployment deployment-sweetheart -n sweetheart
