@@ -11,7 +11,7 @@ steps:
       - -c
       - |
         set -xeou pipefail
-        /usr/bin/docker build --tag gcr.io/${_PROJECT_ID}/sweetheart:$SHORT_SHA --build-arg VERSION=$SHORT_SHA .
+        /usr/bin/docker build --tag gcr.io/${_PROJECT_ID}/sweetheart:$SHORT_SHA --tag gcr.io/${_PROJECT_ID}/sweetheart:latest --build-arg VERSION=$SHORT_SHA .
 
 images:
   - gcr.io/${_PROJECT_ID}/sweetheart
