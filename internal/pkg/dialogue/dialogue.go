@@ -51,7 +51,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	draw.Draw(rgba, rgba.Bounds().Inset(5), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
 	c.SetFont(font)
-	c.SetFontSize(20)
+	c.SetFontSize(40)
 	c.SetClip(rgba.Bounds().Inset(15))
 	c.SetDst(rgba)
 	c.SetSrc(fg)
