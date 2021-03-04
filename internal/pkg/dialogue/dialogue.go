@@ -45,7 +45,7 @@ func loadFont(path string) *truetype.Font {
 	return f
 }
 
-const FONTSIZE = 40
+const FONTSIZE = 35
 
 func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, width int, height int) *image.RGBA {
 	fg, bg := image.White, image.Black
@@ -60,7 +60,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
-	pt := freetype.Pt(15, 15+int(c.PointToFixed(FONTSIZE/2)>>6))
+	pt := freetype.Pt(20, 15+int(c.PointToFixed(FONTSIZE/2)>>6))
 	for _, word := range strings.Split(text, " ") {
 		_, err := c.DrawString(word, pt)
 		if err != nil {
@@ -70,7 +70,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 		pt.X += c.PointToFixed(FONTSIZE/2) + c.PointToFixed(float64(len(word))*(FONTSIZE/3))
 		if pt.X+c.PointToFixed(float64(len(word))*FONTSIZE) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
 			pt.X = c.PointToFixed(15)
-			pt.Y += c.PointToFixed(FONTSIZE)
+			pt.Y += c.PointToFixed(FONTSIZE / 1.25)
 		}
 	}
 
