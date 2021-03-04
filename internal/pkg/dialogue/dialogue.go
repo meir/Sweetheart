@@ -2,21 +2,16 @@ package dialogue
 
 import (
 	"image"
-	"image/draw"
-	"io/ioutil"
-	"log"
 	"path"
-	"strings"
 
-	"github.com/golang/freetype"
-	"github.com/golang/freetype/truetype"
+	"github.com/fogleman/gg"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
-	"golang.org/x/image/math/fixed"
+	"golang.org/x/image/font"
 )
 
 type DialogueGenerator struct {
-	NormalFont *truetype.Font
-	ScaryFont  *truetype.Font
+	NormalFont font.Face
+	ScaryFont  font.Face
 }
 
 const NORMALFONT = "/fonts/omori_normal.ttf"
@@ -33,56 +28,29 @@ func NewDialogueGenerator(st map[settings.BotSetting]string) *DialogueGenerator 
 	}
 }
 
-func loadFont(path string) *truetype.Font {
-	fontBytes, err := ioutil.ReadFile(path)
-	if err != nil {
-		panic(err)
-	}
-
-	f, err := freetype.ParseFont(fontBytes)
+func loadFont(path string) font.Face {
+	f, err := gg.LoadFontFace(path, 35)
 	if err != nil {
 		panic(err)
 	}
 	return f
 }
 
-const FONTSIZE = 35
+func (d *DialogueGenerator) GenerateDialogue(text string, font font.Face, width int, height int) image.Image {
+	dc := gg.NewContext(width, height)
+	dc.SetRGB(0, 0, 0)
+	dc.DrawRectangle(0, 0, float64(width), float64(height))
+	dc.Fill()
+	dc.SetRGB(255, 255, 255)
+	dc.DrawRectangle(2, 2, float64(width)-2, float64(height)-2)
+	dc.Fill()
+	dc.SetRGB(0, 0, 0)
+	dc.DrawRectangle(6, 6, float64(width)-6, float64(height)-6)
+	dc.Fill()
 
-func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, width int, height int) *image.RGBA {
-	fg, bg := image.White, image.Black
-	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
-	draw.Draw(rgba, rgba.Bounds().Inset(2), fg, image.ZP, draw.Src)
-	draw.Draw(rgba, rgba.Bounds().Inset(6), bg, image.ZP, draw.Src)
-	c := freetype.NewContext()
-	c.SetFont(font)
-	c.SetFontSize(FONTSIZE)
-	c.SetClip(rgba.Bounds().Inset(10))
-	c.SetDst(rgba)
-	c.SetSrc(fg)
+	dc.SetFontFace(font)
+	dc.SetRGB(255, 255, 255)
+	dc.DrawStringWrapped(text, 20, 15, 0, 0, float64(width)-20, 1.5, gg.AlignLeft)
 
-	pt := freetype.Pt(20, 15+int(c.PointToFixed(FONTSIZE/2)>>6))
-	for _, word := range strings.Split(text, " ") {
-		length, err := c.DrawString(word, pt)
-		if err != nil {
-			log.Println(err)
-			return rgba
-		}
-		pt.X += d.getSize(" ", font) + length.X
-		if pt.X+d.getSize(word, font) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
-			pt.X = c.PointToFixed(20)
-			pt.Y += c.PointToFixed(FONTSIZE / 1.25)
-		}
-	}
-
-	return rgba
-}
-
-func (d *DialogueGenerator) getSize(str string, font *truetype.Font) fixed.Int26_6 {
-	var size fixed.Int26_6
-	for _, char := range str {
-		hmet := font.HMetric(FONTSIZE, font.Index(char))
-		size += hmet.AdvanceWidth
-	}
-	return size
+	return dc.Image()
 }
