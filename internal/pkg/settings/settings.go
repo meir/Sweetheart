@@ -16,7 +16,7 @@ const (
 )
 
 func AllSettings() []BotSetting {
-	return []BotSetting{VERSION, TOKEN, PREFIX, ASSETS}
+	return []BotSetting{VERSION, TOKEN, PREFIX, ASSETS, FEEDBACK_WEBHOOK, DEBUG_WEBHOOK, DEBUG}
 }
 
 func GatherSettings() map[BotSetting]string {
