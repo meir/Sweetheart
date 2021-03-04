@@ -48,15 +48,15 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	fg, bg := image.White, image.Black
 	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.Draw(rgba, rgba.Bounds(), fg, image.ZP, draw.Src)
-	draw.Draw(rgba, rgba.Bounds().Inset(25), bg, image.ZP, draw.Src)
+	draw.Draw(rgba, rgba.Bounds().Inset(5), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
 	c.SetFont(font)
 	c.SetFontSize(20)
-	c.SetClip(rgba.Bounds())
+	c.SetClip(rgba.Bounds().Inset(10))
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
-	pt := freetype.Pt(10, 10+int(c.PointToFixed(20)>>6))
+	pt := freetype.Pt(10, 10+int(c.PointToFixed(40)>>6))
 	for _, s := range text {
 		_, err := c.DrawString(string(s), pt)
 		if err != nil {
