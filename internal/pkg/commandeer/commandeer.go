@@ -4,37 +4,36 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/meir/Sweetheart/internal/pkg/settings"
+	"github.com/meir/Sweetheart/internal/pkg/meta"
 )
 
 type Commandeer struct {
 	prefix   string
-	settings map[settings.BotSetting]string
 	commands map[string]struct {
 		cmd Command
 		arg Arguments
 	}
 	FailedArguments *Command
+	meta            *meta.Meta
 }
 
 type Meta struct {
-	Session  *discordgo.Session
-	User     *discordgo.User
-	Message  *discordgo.Message
-	Settings map[settings.BotSetting]string
+	*meta.Meta
+	User    *discordgo.User
+	Message *discordgo.Message
 }
 
 type Command func(meta Meta, command string, arguments []string) bool
 
-func NewCommandeer(prefix string, st map[settings.BotSetting]string) *Commandeer {
+func NewCommandeer(prefix string, meta *meta.Meta) *Commandeer {
 	return &Commandeer{
-		prefix:   prefix,
-		settings: st,
+		prefix: prefix,
 		commands: map[string]struct {
 			cmd Command
 			arg Arguments
 		}{},
 		FailedArguments: nil,
+		meta:            meta,
 	}
 }
 
@@ -85,7 +84,7 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			// Failed argument checks
 			if c.FailedArguments != nil {
 				(*c.FailedArguments)(Meta{
-					session, msg.Author, msg, c.settings,
+					c.meta, msg.Author, msg,
 				}, command, args)
 			} else {
 				session.ChannelMessageSend(msg.ChannelID, "[E] failed argument check; no argument failcheck function setup!")
@@ -94,7 +93,7 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 
 		accepted:
 			cmd.cmd(Meta{
-				session, msg.Author, msg, c.settings,
+				c.meta, msg.Author, msg,
 			}, command, args)
 		}
 	}

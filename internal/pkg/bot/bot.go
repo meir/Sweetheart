@@ -6,6 +6,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
+	"github.com/meir/Sweetheart/internal/pkg/dialogue"
+	"github.com/meir/Sweetheart/internal/pkg/meta"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
@@ -13,7 +15,7 @@ type DiscordBot struct {
 	*discordgo.Session
 
 	Commandeer *commandeer.Commandeer
-	Settings   map[settings.BotSetting]string
+	Meta       *meta.Meta
 }
 
 func NewBot(st map[settings.BotSetting]string) (*DiscordBot, error) {
@@ -26,9 +28,15 @@ func NewBot(st map[settings.BotSetting]string) (*DiscordBot, error) {
 		return nil, err
 	}
 
+	meta := &meta.Meta{
+		c,
+		st,
+		dialogue.NewDialogueGenerator(st),
+	}
+
 	return &DiscordBot{
 		c,
-		commandeer.NewCommandeer(st[settings.PREFIX], st),
-		st,
+		commandeer.NewCommandeer(st[settings.PREFIX], meta),
+		meta,
 	}, nil
 }

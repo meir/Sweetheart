@@ -14,5 +14,6 @@ ARG VERSION=???
 ENV VERSION=$VERSION
 ENV PREFIX="-"
 ENV TOKEN=
+ENV ASSETS=./assets
 
 CMD /app/sweetheart

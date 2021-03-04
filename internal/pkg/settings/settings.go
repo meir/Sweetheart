@@ -8,10 +8,11 @@ const (
 	VERSION BotSetting = "VERSION"
 	TOKEN   BotSetting = "TOKEN"
 	PREFIX  BotSetting = "PREFIX"
+	ASSETS  BotSetting = "ASSETS"
 )
 
 func AllSettings() []BotSetting {
-	return []BotSetting{VERSION, TOKEN, PREFIX}
+	return []BotSetting{VERSION, TOKEN, PREFIX, ASSETS}
 }
 
 func GatherSettings() map[BotSetting]string {
