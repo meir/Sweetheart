@@ -77,7 +77,9 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 					goto accepted
 				}
 			}
-			goto failed
+			if len(cmd.arg.Amounts) > 0 {
+				goto failed
+			}
 
 		accepted:
 			cmd.cmd(Meta{
