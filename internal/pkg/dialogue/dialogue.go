@@ -59,17 +59,17 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
-	pt := freetype.Pt(20, 20+int(c.PointToFixed(FONTSIZE)>>6))
+	pt := freetype.Pt(20, 20+int(c.PointToFixed(FONTSIZE)))
 	for _, char := range text {
 		_, err := c.DrawString(string(char), pt)
 		if err != nil {
 			log.Println(err)
 			return rgba
 		}
-		pt.X += c.PointToFixed(FONTSIZE / 3)
+		pt.X += c.PointToFixed(FONTSIZE / 2)
 		if pt.X >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
 			pt.X = c.PointToFixed(20)
-			pt.Y += c.PointToFixed(FONTSIZE / 3)
+			pt.Y += c.PointToFixed(FONTSIZE / 2)
 		}
 	}
 
