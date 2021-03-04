@@ -2,7 +2,6 @@ package dialogue
 
 import (
 	"image"
-	"image/color"
 	"image/draw"
 	"io/ioutil"
 	"log"
@@ -46,21 +45,16 @@ func loadFont(path string) *truetype.Font {
 }
 
 func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, width int, height int) *image.RGBA {
-	fg, bg := image.Black, image.White
-	ruler := color.RGBA{0xdd, 0xdd, 0xdd, 0xff}
-	rgba := image.NewRGBA(image.Rect(0, 0, 640, 480))
-	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
+	fg, bg := image.White, image.Black
+	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
+	draw.Draw(rgba, rgba.Bounds(), fg, image.ZP, draw.Src)
+	draw.Draw(rgba, rgba.Bounds().Inset(25), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
 	c.SetFont(font)
 	c.SetFontSize(20)
 	c.SetClip(rgba.Bounds())
 	c.SetDst(rgba)
 	c.SetSrc(fg)
-
-	for i := 0; i < 200; i++ {
-		rgba.Set(10, 10+i, ruler)
-		rgba.Set(10+i, 10, ruler)
-	}
 
 	pt := freetype.Pt(10, 10+int(c.PointToFixed(20)>>6))
 	for _, s := range text {
@@ -69,7 +63,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 			log.Println(err)
 			return rgba
 		}
-		pt.Y += c.PointToFixed(20 * 5)
+		pt.Y += c.PointToFixed(20 * 1)
 	}
 
 	return rgba
