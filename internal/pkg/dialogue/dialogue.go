@@ -70,7 +70,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 		pt.X += c.PointToFixed(FONTSIZE/2) + c.PointToFixed(float64(len(word))*(FONTSIZE/3))
 		if pt.X+c.PointToFixed(float64(len(word))*FONTSIZE) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
 			pt.X = c.PointToFixed(15)
-			pt.Y += c.PointToFixed(FONTSIZE / 1.75)
+			pt.Y += c.PointToFixed(FONTSIZE)
 		}
 	}
 
