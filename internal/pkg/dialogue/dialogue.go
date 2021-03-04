@@ -10,6 +10,7 @@ import (
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
+	"golang.org/x/image/math/fixed"
 )
 
 type DialogueGenerator struct {
@@ -44,23 +45,33 @@ func loadFont(path string) *truetype.Font {
 	return f
 }
 
+const FONTSIZE = 40
+
 func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, width int, height int) *image.RGBA {
 	fg, bg := image.White, image.Black
 	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
-	draw.Draw(rgba, rgba.Bounds(), fg, image.ZP, draw.Src)
+	draw.Draw(rgba, rgba.Bounds(), bg, image.ZP, draw.Src)
+	draw.Draw(rgba, rgba.Bounds().Inset(1), fg, image.ZP, draw.Src)
 	draw.Draw(rgba, rgba.Bounds().Inset(5), bg, image.ZP, draw.Src)
 	c := freetype.NewContext()
 	c.SetFont(font)
-	c.SetFontSize(40)
+	c.SetFontSize(FONTSIZE)
 	c.SetClip(rgba.Bounds().Inset(15))
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
-	pt := freetype.Pt(10, 10+int(c.PointToFixed(40)>>6))
-	_, err := c.DrawString(text, pt)
-	if err != nil {
-		log.Println(err)
-		return rgba
+	pt := freetype.Pt(20, 20)
+	for _, char := range text {
+		_, err := c.DrawString(string(char), pt)
+		if err != nil {
+			log.Println(err)
+			return rgba
+		}
+		pt.X += FONTSIZE
+		if pt.X >= fixed.Int26_6(rgba.Bounds().Inset(15).Max.X) {
+			pt.X = 20
+			pt.Y += FONTSIZE
+		}
 	}
 
 	return rgba
