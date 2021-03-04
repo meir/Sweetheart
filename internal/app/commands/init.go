@@ -7,4 +7,5 @@ import (
 
 func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("version", version, commandeer.Arguments{Any: true})
+	sweetheart.Commandeer.Apply("sleep", sleep, commandeer.Arguments{Any: true})
 }
