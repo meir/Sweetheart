@@ -10,7 +10,6 @@ import (
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
-	"golang.org/x/image/math/fixed"
 )
 
 type DialogueGenerator struct {
@@ -67,10 +66,10 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 			log.Println(err)
 			return rgba
 		}
-		pt.X += FONTSIZE
-		if pt.X >= fixed.Int26_6(rgba.Bounds().Inset(15).Max.X) {
-			pt.X = 20
-			pt.Y += FONTSIZE
+		pt.X += c.PointToFixed(FONTSIZE)
+		if pt.X >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
+			pt.X = c.PointToFixed(20)
+			pt.Y += c.PointToFixed(FONTSIZE)
 		}
 	}
 
