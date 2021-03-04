@@ -13,13 +13,10 @@ func sleep(meta commandeer.Meta, command string, arguments []string) bool {
 	println("B")
 	reader, writer := io.Pipe()
 	println("C")
-	err := png.Encode(writer, image)
+	go png.Encode(writer, image)
 	println("D")
-	writer.Close()
+	defer writer.Close()
 	defer reader.Close()
-	if err != nil {
-		panic(err)
-	}
 	println("E")
 	meta.Session.ChannelFileSend(meta.Message.ChannelID, "file.png", reader)
 	println("F")
