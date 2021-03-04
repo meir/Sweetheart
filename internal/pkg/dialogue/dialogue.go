@@ -60,16 +60,16 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
-	pt := freetype.Pt(10, 10+int(c.PointToFixed(FONTSIZE/2)>>6))
+	pt := freetype.Pt(20, 20+int(c.PointToFixed(FONTSIZE/2)>>6))
 	for _, word := range strings.Split(text, " ") {
 		_, err := c.DrawString(word, pt)
 		if err != nil {
 			log.Println(err)
 			return rgba
 		}
-		pt.X += c.PointToFixed(FONTSIZE / 1.75)
+		pt.X += c.PointToFixed(FONTSIZE/1.75) + c.PointToFixed(float64(len(word))*FONTSIZE)
 		if pt.X+c.PointToFixed(float64(len(word))*FONTSIZE) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
-			pt.X = c.PointToFixed(float64(len(word))*FONTSIZE) + c.PointToFixed(FONTSIZE/2)
+			pt.X = 20
 			pt.Y += c.PointToFixed(FONTSIZE)
 		}
 	}
