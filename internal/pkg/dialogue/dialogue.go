@@ -50,7 +50,7 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font font.Face, width 
 
 	dc.SetRGB(1, 1, 1)
 	dc.SetFontFace(font)
-	dc.DrawStringWrapped(text, 20, 15, 0, 0, float64(width)-20, 1.5, gg.AlignLeft)
+	dc.DrawStringWrapped(text, 20, 15, 0, 0, float64(width)-20, 1, gg.AlignLeft)
 	dc.Fill()
 
 	return dc.Image()
