@@ -62,13 +62,18 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 
 	pt := freetype.Pt(20, 15+int(c.PointToFixed(FONTSIZE/2)>>6))
 	for _, word := range strings.Split(text, " ") {
-		_, err := c.DrawString(word, pt)
+		length, err := c.DrawString(word, pt)
 		if err != nil {
 			log.Println(err)
 			return rgba
 		}
-		pt.X += c.PointToFixed(FONTSIZE/2) + c.PointToFixed(float64(len(word))*(FONTSIZE/3))
-		if pt.X+c.PointToFixed(float64(len(word))*FONTSIZE) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
+		pt.X += c.PointToFixed(FONTSIZE/2) + length.X
+		size := pt.X
+		for _, char := range word {
+			hmet := font.HMetric(c.PointToFixed(FONTSIZE), font.Index(char))
+			size += hmet.AdvanceWidth
+		}
+		if size >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
 			pt.X = c.PointToFixed(20)
 			pt.Y += c.PointToFixed(FONTSIZE / 1.25)
 		}
