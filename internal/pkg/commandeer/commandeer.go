@@ -66,10 +66,10 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			if cmd.arg.Any {
 				goto accepted
 			}
-			if cmd.arg.Min < 0 || cmd.arg.Min <= len(args) {
+			if cmd.arg.Min <= 0 || cmd.arg.Min <= len(args) {
 				goto accepted
 			}
-			if cmd.arg.Max < 0 || cmd.arg.Max >= len(args) {
+			if cmd.arg.Max <= 0 || cmd.arg.Max >= len(args) {
 				goto accepted
 			}
 			if len(cmd.arg.Amounts) == 0 {

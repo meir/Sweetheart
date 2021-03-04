@@ -9,6 +9,10 @@ const (
 	TOKEN   BotSetting = "TOKEN"
 	PREFIX  BotSetting = "PREFIX"
 	ASSETS  BotSetting = "ASSETS"
+
+	FEEDBACK_WEBHOOK BotSetting = "FEEDBACK_WEBHOOK"
+	DEBUG_WEBHOOK    BotSetting = "DEBUG_WEBHOOK"
+	DEBUG            BotSetting = "DEBUG"
 )
 
 func AllSettings() []BotSetting {
