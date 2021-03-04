@@ -11,6 +11,7 @@ import (
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
+	"golang.org/x/image/math/fixed"
 )
 
 type DialogueGenerator struct {
@@ -67,17 +68,21 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 			log.Println(err)
 			return rgba
 		}
-		pt.X += c.PointToFixed(FONTSIZE/2) + length.X
-		size := pt.X
-		for _, char := range word {
-			hmet := font.HMetric(c.PointToFixed(FONTSIZE), font.Index(char))
-			size += hmet.AdvanceWidth
-		}
-		if size >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
+		pt.X += d.getSize(" ", font) + length.X
+		if pt.X+d.getSize(word, font) >= c.PointToFixed(float64(rgba.Bounds().Inset(15).Max.X)) {
 			pt.X = c.PointToFixed(20)
 			pt.Y += c.PointToFixed(FONTSIZE / 1.25)
 		}
 	}
 
 	return rgba
+}
+
+func (d *DialogueGenerator) getSize(str string, font *truetype.Font) fixed.Int26_6 {
+	var size fixed.Int26_6
+	for _, char := range str {
+		hmet := font.HMetric(FONTSIZE, font.Index(char))
+		size += hmet.AdvanceWidth
+	}
+	return size
 }
