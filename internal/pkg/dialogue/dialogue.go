@@ -40,13 +40,10 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font font.Face, width 
 	dc := gg.NewContext(width, height)
 	dc.SetRGB(0, 0, 0)
 	dc.DrawRectangle(0, 0, float64(width), float64(height))
-	dc.Fill()
 	dc.SetRGB(255, 255, 255)
 	dc.DrawRectangle(2, 2, float64(width)-2, float64(height)-2)
-	dc.Fill()
 	dc.SetRGB(0, 0, 0)
 	dc.DrawRectangle(6, 6, float64(width)-6, float64(height)-6)
-	dc.Fill()
 
 	dc.SetFontFace(font)
 	dc.SetRGB(255, 255, 255)
