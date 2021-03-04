@@ -10,10 +10,11 @@ import (
 type Commandeer struct {
 	prefix   string
 	commands map[string]struct {
-		cmd Command
-		arg Arguments
+		cmd   Command
+		arg   Arguments
+		usage string
 	}
-	FailedArguments *Command
+	FailedArguments Command
 	meta            *meta.Meta
 }
 
@@ -21,6 +22,7 @@ type Meta struct {
 	*meta.Meta
 	User    *discordgo.User
 	Message *discordgo.Message
+	Usage   string
 }
 
 type Command func(meta Meta, command string, arguments []string) bool
@@ -29,21 +31,24 @@ func NewCommandeer(prefix string, meta *meta.Meta) *Commandeer {
 	return &Commandeer{
 		prefix: prefix,
 		commands: map[string]struct {
-			cmd Command
-			arg Arguments
+			cmd   Command
+			arg   Arguments
+			usage string
 		}{},
 		FailedArguments: nil,
 		meta:            meta,
 	}
 }
 
-func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments) {
+func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments, usage string) {
 	c.commands[strings.ToLower(command)] = struct {
-		cmd Command
-		arg Arguments
+		cmd   Command
+		arg   Arguments
+		usage string
 	}{
-		cmd: cmd,
-		arg: arguments,
+		cmd:   cmd,
+		arg:   arguments,
+		usage: usage,
 	}
 }
 
@@ -83,7 +88,7 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 
 		accepted:
 			cmd.cmd(Meta{
-				c.meta, msg.Author, msg,
+				c.meta, msg.Author, msg, cmd.usage,
 			}, command, args)
 			return
 
@@ -91,8 +96,8 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 
 			// Failed argument checks
 			if c.FailedArguments != nil {
-				(*c.FailedArguments)(Meta{
-					c.meta, msg.Author, msg,
+				c.FailedArguments(Meta{
+					c.meta, msg.Author, msg, cmd.usage,
 				}, command, args)
 			} else {
 				session.ChannelMessageSend(msg.ChannelID, "[E] failed argument check; no argument failcheck function setup!")
