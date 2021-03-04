@@ -8,5 +8,5 @@ import (
 func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("version", version, commandeer.Arguments{Any: true})
 	sweetheart.Commandeer.Apply("sleep", sleep, commandeer.Arguments{Any: true})
-	sweetheart.Commandeer.Apply("feedback", feedback, commandeer.Arguments{Min: 1})
+	sweetheart.Commandeer.Apply("feedback", feedback, commandeer.Arguments{Any: false, Min: 1})
 }

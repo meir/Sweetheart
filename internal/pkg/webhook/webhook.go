@@ -10,7 +10,7 @@ import (
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
-func Feedback(meta *meta.Meta, message discordgo.Message) {
+func Feedback(meta *meta.Meta, message discordgo.Message, feedback string) {
 	if meta.Settings[settings.FEEDBACK_WEBHOOK] == "" {
 		// TODO: logging
 		return
@@ -20,8 +20,6 @@ func Feedback(meta *meta.Meta, message discordgo.Message) {
 	self := meta.Session.State.User.Username
 	userIcon := message.Author.AvatarURL("256")
 	user := message.Author.Username
-
-	feedback := message.Content
 
 	guild, err := meta.Session.Guild(message.GuildID)
 	if err != nil {
