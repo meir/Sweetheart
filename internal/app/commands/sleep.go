@@ -8,7 +8,7 @@ import (
 )
 
 func sleep(meta commandeer.Meta, command string, arguments []string) bool {
-	image := meta.DialogueGenerator.GenerateDialogue("Sleep is the most important meal of the day!", meta.DialogueGenerator.NormalFont, 500, 200)
+	image := meta.DialogueGenerator.GenerateDialogue("Sleep is the most important meal of the day!", meta.DialogueGenerator.NormalFont, 500, 140)
 	var buf bytes.Buffer
 	err := png.Encode(&buf, image)
 	if err != nil {

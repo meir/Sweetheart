@@ -52,18 +52,15 @@ func (d *DialogueGenerator) GenerateDialogue(text string, font *truetype.Font, w
 	c := freetype.NewContext()
 	c.SetFont(font)
 	c.SetFontSize(20)
-	c.SetClip(rgba.Bounds().Inset(10))
+	c.SetClip(rgba.Bounds().Inset(15))
 	c.SetDst(rgba)
 	c.SetSrc(fg)
 
 	pt := freetype.Pt(10, 10+int(c.PointToFixed(40)>>6))
-	for _, s := range text {
-		_, err := c.DrawString(string(s), pt)
-		if err != nil {
-			log.Println(err)
-			return rgba
-		}
-		pt.Y += c.PointToFixed(20 * 1)
+	_, err := c.DrawString(text, pt)
+	if err != nil {
+		log.Println(err)
+		return rgba
 	}
 
 	return rgba
