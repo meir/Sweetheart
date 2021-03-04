@@ -72,9 +72,6 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			if cmd.arg.Max <= 0 || cmd.arg.Max >= len(args) {
 				goto accepted
 			}
-			if len(cmd.arg.Amounts) == 0 {
-				goto accepted
-			}
 			for _, amount := range cmd.arg.Amounts {
 				if len(args) == amount {
 					goto accepted
