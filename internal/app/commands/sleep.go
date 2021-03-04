@@ -11,6 +11,8 @@ func sleep(meta commandeer.Meta, command string, arguments []string) bool {
 	image := meta.DialogueGenerator.GenerateDialogue("Sleep is the most important meal of the day!", meta.DialogueGenerator.NormalFont, 500, 200)
 	reader, writer := io.Pipe()
 	err := png.Encode(writer, image)
+	writer.Close()
+	defer reader.Close()
 	if err != nil {
 		panic(err)
 	}
