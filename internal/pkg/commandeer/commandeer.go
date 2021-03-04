@@ -66,17 +66,26 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			if cmd.arg.Any {
 				goto accepted
 			}
-			if cmd.arg.Min <= 0 || cmd.arg.Min <= len(args) {
-				goto accepted
+			if !(cmd.arg.Min <= 0 || cmd.arg.Min <= len(args)) {
+				goto failed
 			}
-			if cmd.arg.Max <= 0 || cmd.arg.Max >= len(args) {
-				goto accepted
+			if !(cmd.arg.Max <= 0 || cmd.arg.Max >= len(args)) {
+				goto failed
 			}
 			for _, amount := range cmd.arg.Amounts {
 				if len(args) == amount {
 					goto accepted
 				}
 			}
+			goto failed
+
+		accepted:
+			cmd.cmd(Meta{
+				c.meta, msg.Author, msg,
+			}, command, args)
+			return
+
+		failed:
 
 			// Failed argument checks
 			if c.FailedArguments != nil {
@@ -86,12 +95,6 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			} else {
 				session.ChannelMessageSend(msg.ChannelID, "[E] failed argument check; no argument failcheck function setup!")
 			}
-			return
-
-		accepted:
-			cmd.cmd(Meta{
-				c.meta, msg.Author, msg,
-			}, command, args)
 		}
 	}
 }
