@@ -65,13 +65,13 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 
 	embed := &discordgo.MessageEmbed{
 		Image: &discordgo.MessageEmbedImage{
-			URL:    "wisdom.png",
+			URL:    "attachment://wisdom.png",
 			Width:  500,
 			Height: 140,
 		},
 		Author: &discordgo.MessageEmbedAuthor{
 			Name:    "Wise Rock",
-			IconURL: "icon.png",
+			IconURL: "attachment://icon.png",
 		},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("%v advice", adviceType),
