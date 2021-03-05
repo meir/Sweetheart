@@ -52,19 +52,24 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 		}
 	}
 
+	println("a")
 	image := meta.DialogueGenerator.GenerateDialogue(advices[adviceType][rand.Intn(len(advices[adviceType]))], meta.DialogueGenerator.NormalFont, 500, 140)
 	var buf bytes.Buffer
 	err := png.Encode(&buf, image)
 	if err != nil {
 		panic(err)
 	}
+	println("b")
 	b64image := base64.StdEncoding.EncodeToString(buf.Bytes())
 
+	println("c")
 	img, err := ioutil.ReadFile(path.Join(meta.Settings[settings.ASSETS], "/images/wiserock.png"))
 	if err != nil {
 		panic(err)
 	}
+	println("d")
 	b64icon := base64.StdEncoding.EncodeToString(img)
+	println("e")
 
 	embed := &discordgo.MessageEmbed{
 		Image: &discordgo.MessageEmbedImage{
