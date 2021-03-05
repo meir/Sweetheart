@@ -2,6 +2,7 @@ package dialogue
 
 import (
 	"image"
+	"math"
 	"path"
 
 	"github.com/fogleman/gg"
@@ -37,9 +38,10 @@ func loadFont(path string) font.Face {
 }
 
 func (d *DialogueGenerator) GenerateDialogue(text string, font font.Face, width int, height int) image.Image {
-	if mult := len(text) / 35; mult > 1 {
-		width *= mult
-		height *= mult
+	var mult float64 = 0
+	if mult = float64(len(text)) / 35; mult > 1 {
+		width = int(math.Round(mult * float64(width)))
+		height = int(math.Round(mult * float64(height)))
 	}
 
 	dc := gg.NewContext(width, height)
