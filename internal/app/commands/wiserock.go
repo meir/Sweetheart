@@ -2,7 +2,6 @@ package commands
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"image/png"
 	"io/ioutil"
@@ -58,31 +57,41 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 	if err != nil {
 		panic(err)
 	}
-	b64image := base64.StdEncoding.EncodeToString(buf.Bytes())
 
-	img, err := ioutil.ReadFile(path.Join(meta.Settings[settings.ASSETS], "/images/wiserock.png"))
+	rockicon, err := ioutil.ReadFile(path.Join(meta.Settings[settings.ASSETS], "/images/wiserock.png"))
 	if err != nil {
 		panic(err)
 	}
-	b64icon := base64.StdEncoding.EncodeToString(img)
 
 	embed := &discordgo.MessageEmbed{
 		Image: &discordgo.MessageEmbedImage{
-			URL:    fmt.Sprintf("data:image/png;base64,%v", b64image),
+			URL:    "wisdom.png",
 			Width:  500,
 			Height: 140,
 		},
 		Author: &discordgo.MessageEmbedAuthor{
 			Name:    "Wise Rock",
-			IconURL: fmt.Sprintf("data:image/png;base64,%v", b64icon),
+			IconURL: "icon.png",
 		},
 		Footer: &discordgo.MessageEmbedFooter{
 			Text: fmt.Sprintf("%v advice", adviceType),
 		},
 	}
-	_, err = meta.Session.ChannelMessageSendEmbed(meta.Message.ChannelID, embed)
-	if err != nil {
-		panic(err)
-	}
+
+	meta.Session.ChannelMessageSendComplex(meta.Message.ChannelID, &discordgo.MessageSend{
+		Embed: embed,
+		Files: []*discordgo.File{
+			{
+				Name:        "wisdom.png",
+				ContentType: "image/png",
+				Reader:      bytes.NewReader(buf.Bytes()),
+			},
+			{
+				Name:        "icon.png",
+				ContentType: "image/png",
+				Reader:      bytes.NewReader(rockicon),
+			},
+		},
+	})
 	return true
 }
