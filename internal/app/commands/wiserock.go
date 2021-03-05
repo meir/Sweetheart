@@ -78,7 +78,7 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 		},
 	}
 
-	meta.Session.ChannelMessageSendComplex(meta.Message.ChannelID, &discordgo.MessageSend{
+	_, err = meta.Session.ChannelMessageSendComplex(meta.Message.ChannelID, &discordgo.MessageSend{
 		Embed: embed,
 		Files: []*discordgo.File{
 			{
@@ -93,5 +93,8 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 			},
 		},
 	})
+	if err != nil {
+		panic(err)
+	}
 	return true
 }
