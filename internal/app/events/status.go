@@ -22,13 +22,18 @@ func JoinedGuild(sweetheart *bot.DiscordBot) func(session *discordgo.Session, gu
 		if err != nil {
 			panic(err)
 		}
+		println(len(roles))
 		for _, role := range roles {
+			println(role.Name)
 			if role.Name == session.State.User.Username {
 				color, err := strconv.Atoi(sweetheart.Meta.Settings[settings.ROLE_COLOR])
 				if err != nil {
 					panic(err)
 				}
-				session.GuildRoleEdit(guild.ID, role.ID, role.Name, color, role.Hoist, role.Permissions, role.Mentionable)
+				_, err = session.GuildRoleEdit(guild.ID, role.ID, role.Name, color, role.Hoist, role.Permissions, role.Mentionable)
+				if err != nil {
+					panic(err)
+				}
 			}
 		}
 	}
