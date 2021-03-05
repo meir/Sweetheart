@@ -37,6 +37,11 @@ func loadFont(path string) font.Face {
 }
 
 func (d *DialogueGenerator) GenerateDialogue(text string, font font.Face, width int, height int) image.Image {
+	if mult := len(text) / 35; mult > 1 {
+		width *= mult
+		height *= mult
+	}
+
 	dc := gg.NewContext(width, height)
 	dc.SetRGB(0, 0, 0)
 	dc.DrawRectangle(0, 0, float64(width), float64(height))
