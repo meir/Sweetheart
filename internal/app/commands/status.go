@@ -15,8 +15,8 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	lines := map[string]bool{}
 	lines[fmt.Sprintf("Sweetheart VH-%v", meta.Settings[settings.VERSION])] = true
 	width := 500
-	height := 40 * len(lines)
-	dc := gg.NewContext(width, height+100)
+	height := (40 * len(lines)) + 100
+	dc := gg.NewContext(width, height)
 
 	dc.SetRGB(0, 0, 0)
 	dc.DrawRectangle(0, 0, float64(width), float64(height))
@@ -32,7 +32,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	dc.SetFontFace(meta.DialogueGenerator.NormalFont)
 	var i float64 = 0
 	for k, v := range lines {
-		dc.DrawStringWrapped(k, 20, 5+(20*i), 0, 0, float64(width)-20, 1, gg.AlignLeft)
+		dc.DrawStringWrapped(k, 40, 5+(20*i), 0, 0, float64(width)-20, 1, gg.AlignLeft)
 		dc.Fill()
 		if v {
 			dc.SetRGB255(110, 255, 161)
@@ -40,7 +40,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 			dc.Fill()
 		} else {
 			dc.SetRGB255(255, 148, 138)
-			dc.DrawCircle(10, 10+(20*i), 5)
+			dc.DrawCircle(20, 30+(20*i), 10)
 			dc.SetLineWidth(2)
 			dc.Stroke()
 		}
