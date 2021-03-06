@@ -1,13 +1,13 @@
 
 @font-face {
     font-family: "Omori";
-    src: url("./fonts/omori_normal.ttf") format("truetype");
+    src: url("/fonts/omori_normal.ttf") format("truetype");
 }
 
 
 @font-face {
     font-family: "Discord";
-    src: url("./fonts/discord.woff") format("woff");
+    src: url("/fonts/discord.woff") format("woff");
 }
 
 html,body {
