@@ -31,14 +31,17 @@ func (ws *Webserver) Start() {
 }
 
 func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
-	if strings.HasPrefix(r.URL.RawPath, "/api") {
+	if strings.HasPrefix(r.URL.Path, "/api") {
 		w.WriteHeader(200)
 		w.Write([]byte("api"))
-	} else if r.URL.RawPath == "/heartbeat" {
+	} else if r.URL.Path == "/heartbeat" {
 		w.WriteHeader(200)
 		w.Write([]byte("Meow? (Waiting for something to happen?)"))
 	} else {
 		file := path.Join(ws.Meta.Settings[settings.ASSETS], "web", r.URL.Path)
+		if r.URL.Path == "/" {
+			file = path.Join(ws.Meta.Settings[settings.ASSETS], "web", "/index.html")
+		}
 		if path.IsAbs(file) {
 			http.ServeFile(w, r, file)
 		} else {
