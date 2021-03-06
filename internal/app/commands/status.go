@@ -29,6 +29,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	dc.SetFontFace(meta.DialogueGenerator.NormalFont)
 	var i float64 = 0
 	for k, v := range lines {
+		dc.SetRGB(1, 1, 1)
 		dc.DrawStringWrapped(k, 40, 5+(20*i), 0, 0, float64(width)-20, 1, gg.AlignLeft)
 		dc.Fill()
 		if v {
