@@ -32,6 +32,7 @@ func Sweetheart() {
 	}
 
 	sweetheart.Meta.Status[fmt.Sprintf("Sweetheart VH-%v", sweetheart.Meta.Settings[settings.VERSION])] = true
+	go sweetheart.Webserver.Start()
 
 	// wait for kill signal
 	sc := make(chan os.Signal, 1)
