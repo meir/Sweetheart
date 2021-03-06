@@ -13,6 +13,7 @@ func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("sleep", sleep, commandeer.Arguments{Any: true}, "")
 	sweetheart.Commandeer.Apply("feedback", feedback, commandeer.Arguments{Min: 1}, "[message]")
 	sweetheart.Commandeer.Apply("wiserock", wiserock, commandeer.Arguments{Min: 0, Max: 1}, "(good/ok/bad)")
+	sweetheart.Commandeer.Apply("status", status, commandeer.Arguments{Any: true}, "")
 
 	sweetheart.Commandeer.FailedArguments = failedArguments
 }
