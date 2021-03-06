@@ -15,8 +15,8 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	lines := map[string]bool{}
 	lines[fmt.Sprintf("Sweetheart VH-%v", meta.Settings[settings.VERSION])] = true
 	width := 500
-	height := 20 * len(lines)
-	dc := gg.NewContext(width, height)
+	height := 40 * len(lines)
+	dc := gg.NewContext(width, height+100)
 
 	dc.SetRGB(0, 0, 0)
 	dc.DrawRectangle(0, 0, float64(width), float64(height))
