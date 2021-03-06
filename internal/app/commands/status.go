@@ -36,7 +36,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 		dc.Fill()
 		if v {
 			dc.SetRGB255(110, 255, 161)
-			dc.DrawCircle(10, 10+(20*i), 5)
+			dc.DrawCircle(20, 30+(20*i), 10)
 			dc.Fill()
 		} else {
 			dc.SetRGB255(255, 148, 138)
