@@ -38,15 +38,6 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		w.Write([]byte("Meow? (Waiting for something to happen?)"))
 	} else {
-		file := path.Join(ws.Meta.Settings[settings.ASSETS], "web", r.URL.Path)
-		if r.URL.Path == "/" || r.URL.Path == "" {
-			file = path.Join(ws.Meta.Settings[settings.ASSETS], "web", "/index.html")
-		}
-		if path.IsAbs(file) {
-			http.ServeFile(w, r, file)
-		} else {
-			w.WriteHeader(404)
-			w.Write([]byte{})
-		}
+		http.ServeFile(w, r, path.Join(ws.Meta.Settings[settings.ASSETS], "web"))
 	}
 }
