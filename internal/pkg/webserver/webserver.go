@@ -38,6 +38,6 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(200)
 		w.Write([]byte("Meow? (Waiting for something to happen?)"))
 	} else {
-		http.ServeFile(w, r, path.Join(ws.Meta.Settings[settings.ASSETS], "web"))
+		http.ServeFile(w, r, path.Join(ws.Meta.Settings[settings.ASSETS], "web", r.URL.Path))
 	}
 }
