@@ -2,18 +2,15 @@ package commands
 
 import (
 	"bytes"
-	"fmt"
 	"image/png"
 
 	"github.com/fogleman/gg"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
-	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
 func status(meta commandeer.Meta, command string, arguments []string) bool {
-	lines := map[string]bool{}
-	lines[fmt.Sprintf("Sweetheart VH-%v", meta.Settings[settings.VERSION])] = true
+	lines := meta.Status
 	width := 500
 	height := (40 * len(lines)) + 100
 	dc := gg.NewContext(width, height)

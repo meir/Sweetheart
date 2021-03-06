@@ -1,6 +1,7 @@
 package sweetheart
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -29,6 +30,8 @@ func Sweetheart() {
 	if err != nil {
 		panic(err)
 	}
+
+	sweetheart.Meta.Status[fmt.Sprintf("Sweetheart VH-%v", sweetheart.Meta.Settings[settings.VERSION])] = true
 
 	// wait for kill signal
 	sc := make(chan os.Signal, 1)
