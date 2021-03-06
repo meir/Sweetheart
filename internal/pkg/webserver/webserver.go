@@ -1,6 +1,7 @@
 package webserver
 
 import (
+	"fmt"
 	"net/http"
 	"path"
 	"strings"
@@ -23,7 +24,7 @@ func (ws *Webserver) Start() {
 	}()
 	ws.Meta.Status["Webserver"] = true
 
-	err := http.ListenAndServe(ws.Meta.Settings[settings.PORT], http.HandlerFunc(ws.handler))
+	err := http.ListenAndServe(fmt.Sprintf(":%v", ws.Meta.Settings[settings.PORT]), http.HandlerFunc(ws.handler))
 	if err != nil {
 		panic(err)
 	}
