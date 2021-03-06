@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/meta"
 )
 
@@ -100,7 +101,11 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 					c.meta, msg.Author, msg, cmd.usage,
 				}, command, args)
 			} else {
-				session.ChannelMessageSend(msg.ChannelID, "[E] failed argument check; no argument failcheck function setup!")
+				_, err := session.ChannelMessageSend(msg.ChannelID, "[E] failed argument check; no argument failcheck function setup!")
+				if err != nil {
+					logging.Warn("Failed to send message", err)
+					return
+				}
 			}
 		}
 	}

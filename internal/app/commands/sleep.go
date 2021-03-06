@@ -5,6 +5,7 @@ import (
 	"image/png"
 
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
+	"github.com/meir/Sweetheart/internal/pkg/logging"
 )
 
 func sleep(meta commandeer.Meta, command string, arguments []string) bool {
@@ -12,8 +13,13 @@ func sleep(meta commandeer.Meta, command string, arguments []string) bool {
 	var buf bytes.Buffer
 	err := png.Encode(&buf, image)
 	if err != nil {
-		panic(err)
+		logging.Warn("Failed to encode buffer to png", err)
+		return false
 	}
-	meta.Session.ChannelFileSend(meta.Message.ChannelID, "file.png", bytes.NewReader(buf.Bytes()))
+	_, err = meta.Session.ChannelFileSend(meta.Message.ChannelID, "file.png", bytes.NewReader(buf.Bytes()))
+	if err != nil {
+		logging.Warn("Failed to send message", err)
+		return false
+	}
 	return true
 }

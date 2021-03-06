@@ -12,6 +12,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
+	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
@@ -55,12 +56,12 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 	var buf bytes.Buffer
 	err := png.Encode(&buf, image)
 	if err != nil {
-		panic(err)
+		logging.Warn("Failed to encode buffer into png", err)
 	}
 
 	rockicon, err := ioutil.ReadFile(path.Join(meta.Settings[settings.ASSETS], "/images/wiserock.png"))
 	if err != nil {
-		panic(err)
+		logging.Warn("Failed to read file of wiserock.png", err)
 	}
 
 	embed := &discordgo.MessageEmbed{
@@ -94,7 +95,8 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 		},
 	})
 	if err != nil {
-		panic(err)
+		logging.Warn("Failed to send message", err)
+		return false
 	}
 	return true
 }
