@@ -12,7 +12,7 @@ import (
 func status(meta commandeer.Meta, command string, arguments []string) bool {
 	lines := meta.Status
 	width := 500
-	height := (40 * len(lines)) + 100
+	height := (50 * len(lines)) + 50
 	dc := gg.NewContext(width, height)
 
 	dc.SetRGB(0, 0, 0)
@@ -30,15 +30,15 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	var i float64 = 0
 	for k, v := range lines {
 		dc.SetRGB(1, 1, 1)
-		dc.DrawStringWrapped(k, 40, 5+(20*i), 0, 0, float64(width)-20, 1, gg.AlignLeft)
+		dc.DrawStringWrapped(k, 50, 5+(25*i), 0, 0, float64(width)-20, 1, gg.AlignLeft)
 		dc.Fill()
 		if v {
 			dc.SetRGB255(110, 255, 161)
-			dc.DrawCircle(25, 35+(20*i), 8)
+			dc.DrawCircle(25, 35+(25*i), 8)
 			dc.Fill()
 		} else {
 			dc.SetRGB255(255, 148, 138)
-			dc.DrawCircle(25, 35+(20*i), 8)
+			dc.DrawCircle(25, 35+(25*i), 8)
 			dc.SetLineWidth(2)
 			dc.Stroke()
 		}
