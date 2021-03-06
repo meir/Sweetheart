@@ -1,10 +1,13 @@
 package commands
 
 import (
+	"bytes"
 	"fmt"
+	"image/png"
 
 	"github.com/fogleman/gg"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
+	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
@@ -42,6 +45,18 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 			dc.Stroke()
 		}
 		i++
+	}
+
+	var buf bytes.Buffer
+	err := png.Encode(&buf, dc.Image())
+	if err != nil {
+		logging.Warn("Failed to encode buffer into png", err)
+	}
+
+	_, err = meta.Session.ChannelFileSend(meta.Message.ChannelID, "sweetheart-status.png", bytes.NewReader(buf.Bytes()))
+	if err != nil {
+		logging.Warn("Failed to send message", err)
+		return false
 	}
 	return true
 }
