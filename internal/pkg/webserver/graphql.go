@@ -1,6 +1,11 @@
 package webserver
 
 import (
+	"encoding/base64"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
@@ -59,6 +64,35 @@ func (ws *Webserver) schema() *graphql.Schema {
 				response["oauth"] = ws.Meta.Settings[settings.OAUTH_URL]
 				response["invite"] = ws.Meta.Settings[settings.INVITE_URL]
 				return response, nil
+			},
+		},
+		"auth": &graphql.Field{
+			Type: graphql.String,
+			Args: graphql.FieldConfigArgument{
+				"code": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				resp, err := http.PostForm("https://discord.com/api/oauth2/token", url.Values{
+					"client_id":     {ws.Meta.Settings[settings.CLIENT_ID]},
+					"client_secret": {ws.Meta.Settings[settings.TOKEN]},
+					"grant_type":    {ws.Meta.Settings[settings.GRANT_TYPE]},
+					"scope":         {ws.Meta.Settings[settings.SCOPE]},
+					"code":          {p.Args["code"].(string)},
+					"redirect_uri":  {ws.Meta.Settings[settings.REDIRECT]},
+				})
+				if err != nil {
+					return nil, err
+				}
+				defer resp.Body.Close()
+
+				data, err := ioutil.ReadAll(resp.Body)
+				if err != nil {
+					return nil, err
+				}
+
+				return base64.StdEncoding.EncodeToString(data), err
 			},
 		},
 	}

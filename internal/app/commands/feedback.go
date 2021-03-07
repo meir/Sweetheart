@@ -61,11 +61,12 @@ func feedback(meta commandeer.Meta, command string, arguments []string) bool {
 		return false
 	}
 
-	_, err = http.Post(meta.Settings[settings.FEEDBACK_WEBHOOK], "application/json", bytes.NewReader(data))
+	r, err := http.Post(meta.Settings[settings.FEEDBACK_WEBHOOK], "application/json", bytes.NewReader(data))
 	if err != nil {
 		logging.Warn("Failed to call feedback webhook", err)
 		return false
 	}
+	defer r.Body.Close()
 	_, err = meta.Session.ChannelMessageSend(meta.Message.ChannelID, "Sent feedback to developer server! thank you :)")
 	if err != nil {
 		logging.Warn("Failed to send message", err)

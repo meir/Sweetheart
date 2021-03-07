@@ -68,9 +68,10 @@ func webhook(t string, l ...interface{}) {
 		return
 	}
 
-	_, err = http.Post(os.Getenv("DEBUG_WEBHOOK"), "application/json", bytes.NewReader(data))
+	r, err := http.Post(os.Getenv("DEBUG_WEBHOOK"), "application/json", bytes.NewReader(data))
 	if err != nil {
 		fmt.Println("failed to call debug webhook: ", err)
 		return
 	}
+	defer r.Body.Close()
 }

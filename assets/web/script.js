@@ -42,4 +42,18 @@ window.onload = () => {
         document.getElementById('login').setAttribute('href', r.data.settings.oauth)
         document.getElementById('invite').setAttribute('href', r.data.settings.invite)
     })
+    
+    if(localStorage.discord_session) {
+        console.log('authenticated')
+    }else{
+        const urlParams = new URLSearchParams(window.location.search);
+        const discordCode = urlParams.get('code');
+        
+        const code_query = `{auth(code: "${discordCode}")}`
+        
+        graphql(code_query).then(r => {
+            localStorage.discord_session = r.data.auth
+            window.location.href = '/'
+        })
+    }
 }
