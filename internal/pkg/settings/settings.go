@@ -39,6 +39,7 @@ func GatherSettings() map[BotSetting]string {
 	s := map[BotSetting]string{}
 	for _, v := range AllSettings() {
 		s[v] = os.Getenv(string(v))
+		println(v, ":", s[v])
 	}
 	return s
 }
