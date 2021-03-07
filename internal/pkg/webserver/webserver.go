@@ -32,8 +32,7 @@ func (ws *Webserver) Start() {
 
 func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/api") {
-		w.WriteHeader(200)
-		w.Write([]byte("api"))
+		// graphql.Handler(ws.Schema).ServeHTTP(w, r)
 	} else if r.URL.Path == "/heartbeat" {
 		w.WriteHeader(200)
 		w.Write([]byte("Meow? (Waiting for something to happen?)"))

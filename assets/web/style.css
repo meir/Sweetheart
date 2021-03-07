@@ -2,6 +2,8 @@
 @font-face {
     font-family: "Omori";
     src: url("/fonts/omori_normal.ttf") format("truetype");
+    font-smooth: never;
+    -webkit-font-smoothing : none;
 }
 
 
@@ -10,11 +12,19 @@
     src: url("/fonts/discord.woff") format("woff");
 }
 
+@font-face {
+    font-family: "Discord-light";
+    src: url("/fonts/discord-light.woff") format("woff");
+}
+
 html,body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
+    background-image: url('/images/Space_parallax.png');
+    background-size: cover;
+    image-rendering: pixelated;
 }
 
 .omori-font {
@@ -76,7 +86,8 @@ html,body {
     width: 60%;
     height: 100%;
     color: white;
-    font-family: 'Discord'
+    font-family: 'Discord';
+    display: flex;
 }
 
 .main {
@@ -99,7 +110,6 @@ html,body {
 .wrapper {
     position: relative;
     padding-left: 4.5rem;
-    margin-top: 1.0625rem;
     min-height: 2.75rem;
     padding-top: .125rem;
     padding-bottom: .125rem;
@@ -160,6 +170,11 @@ html,body {
     overflow: hidden;
     -ms-flex-negative: 0;
     flex-shrink: 0;
+    cursor: pointer;
+}
+
+.username:hover {
+    text-decoration: underline;
 }
 
 .botTag {
@@ -203,4 +218,31 @@ html,body {
     cursor: default;
     pointer-events: none;
     font-weight: 500;
+}
+
+.messageContent {
+    font-weight: 600;
+    font-family: 'Discord-light';
+}
+
+.hidden {
+    display: none;
+}
+
+#login {
+    width: 100px;
+    background-color:#7289DA;
+    border-radius: 5px;
+    padding: 4px;
+    padding-bottom: 0px;
+    margin: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.preview {
+    width: 60%;
+    margin: auto auto;
+    padding: 10px;
+    border-radius: 5px;
 }
