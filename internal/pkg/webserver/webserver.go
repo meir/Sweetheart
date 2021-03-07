@@ -40,7 +40,7 @@ func (ws *Webserver) Start() {
 
 func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasPrefix(r.URL.Path, "/api") {
-		if r.Method == http.MethodPost {
+		if r.Method != http.MethodPost {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte{})
 			return
@@ -58,7 +58,7 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 		}
 		r := graphql.Do(params)
 		if len(r.Errors) > 0 {
-			logging.Warn("failed to execute graphql operation, errors: %+v", r.Errors)
+			logging.Warn("failed to execute graphql operation, errors:", r.Errors)
 		}
 		response, err := json.Marshal(r)
 		if err != nil {
