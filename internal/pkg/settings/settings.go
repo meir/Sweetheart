@@ -16,7 +16,7 @@ const (
 	INVITE_URL BotSetting = "INVITE_URL"
 	OAUTH_URL  BotSetting = "OAUTH_URL"
 
-	CLIENT_ID  BotSetting = "CLIEND_ID"
+	CLIENT_ID  BotSetting = "CLIENT_ID"
 	GRANT_TYPE BotSetting = "GRANT_TYPE"
 	SCOPE      BotSetting = "SCOPE"
 	REDIRECT   BotSetting = "REDIRECT"
