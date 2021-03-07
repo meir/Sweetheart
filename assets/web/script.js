@@ -53,7 +53,6 @@ window.onload = () => {
         
         graphql(code_query).then(r => {
             localStorage.discord_session = r.data.auth
-            window.location.href = '/'
         })
     }
 }
