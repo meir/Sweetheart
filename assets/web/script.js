@@ -54,11 +54,13 @@ window.onload = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const discordCode = urlParams.get('code');
         
-        const code_query = `{auth(code: "${discordCode}")}`
-        console.log(code_query)
+        if(discordCode) {
+            const code_query = `{auth(code: "${discordCode}")}`
         
-        graphql(code_query).then(r => {
-            localStorage.discord_session = r.data.auth
-        })
+            graphql(code_query).then(r => {
+                localStorage.discord_session = r.data.auth
+                window.location.href = "/"
+            })
+        }
     }
 }
