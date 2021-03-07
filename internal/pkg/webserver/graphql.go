@@ -62,12 +62,8 @@ func (ws *Webserver) schema() *graphql.Schema {
 			},
 		},
 	}
+	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: queryFields}
 
-	root := graphql.NewObject(graphql.ObjectConfig{
-		Name:   "query",
-		Fields: queryFields,
-	})
-	rootQuery := graphql.ObjectConfig{Name: "RootQuery", Fields: root}
 	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
 	schema, err := graphql.NewSchema(schemaConfig)
 	if err != nil {
