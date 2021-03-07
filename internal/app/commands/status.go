@@ -50,7 +50,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	}
 
 	var buf bytes.Buffer
-	err := png.Encode(&buf, dc.Image())
+	err = png.Encode(&buf, dc.Image())
 	if err != nil {
 		logging.Warn("Failed to encode buffer into png", err)
 	}
