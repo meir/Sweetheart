@@ -8,6 +8,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
 	"github.com/meir/Sweetheart/internal/pkg/dialogue"
+	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/meta"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 	"github.com/meir/Sweetheart/internal/pkg/webserver"
@@ -35,12 +36,20 @@ func NewBot(st map[settings.BotSetting]string) (*DiscordBot, error) {
 
 	var database *mongo.Client = nil
 	if url := st[settings.MONGODB_URL]; url != "" {
+		logging.Debug("Trying to connect to database:", url)
 		opts := options.Client()
 		opts.ApplyURI(url)
 		opts.SetMaxPoolSize(5)
 		if database, err = mongo.Connect(context.Background(), opts); err != nil {
 			panic(err)
 		}
+
+		err = database.Ping(context.Background(), nil)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		logging.Debug("No database url has been given.")
 	}
 
 	meta := &meta.Meta{

@@ -2,6 +2,7 @@ package commands
 
 import (
 	"bytes"
+	"context"
 	"image/png"
 
 	"github.com/fogleman/gg"
@@ -10,6 +11,9 @@ import (
 )
 
 func status(meta commandeer.Meta, command string, arguments []string) bool {
+	err := meta.Database.Ping(context.Background(), nil)
+	meta.Status["Database"] = (err == nil)
+
 	lines := meta.Status
 	width := 500
 	height := (50 * len(lines)) + 50
