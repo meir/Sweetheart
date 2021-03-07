@@ -55,6 +55,7 @@ window.onload = () => {
         const discordCode = urlParams.get('code');
         
         const code_query = `{auth(code: "${discordCode}")}`
+        console.log(code_query)
         
         graphql(code_query).then(r => {
             localStorage.discord_session = r.data.auth
