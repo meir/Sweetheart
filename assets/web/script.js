@@ -8,12 +8,16 @@ window.bg_last = 0;
     const frames = 60
     const jumps = 20
     let f = (t) => {
+        if(window.stop_loop === true) return
         if((t - lastTime) >= second/frames) {
             let x = window.bg_last
-            x -= (x-window.bg_towards)/jumps
-            window.bg_last = x
+            let change = (x-window.bg_towards)/jumps
+            if(change >= .02 || change <= -.02) {
+                x -= change
+                window.bg_last = x
             
-            document.body.setAttribute('style', `background-position-x: ${x}%`)
+                document.documentElement.style.setProperty('--bg-offset', `${x}%`)
+            }
             lastTime = t
         }
         requestAnimationFrame(f)
@@ -37,6 +41,7 @@ async function graphql(body) {
 }
 
 window.onload = () => {
+    document.getElementById("main").setAttribute('style', 'background-image: url(/images/Space_parallax.png)')
     const query = `{settings{oauth invite}}`
     graphql(query).then(r => {
         document.getElementById('login').setAttribute('href', r.data.settings.oauth)

@@ -1,4 +1,8 @@
 
+:root {
+    --bg-offset: 0%;
+}
+
 @font-face {
     font-family: "Omori";
     src: url("/fonts/omori_normal.ttf") format("truetype");
@@ -24,10 +28,17 @@ html,body {
     height: 100%;
 }
 
-body {
-    background-image: url('/images/Space_parallax.png');
-    background-size: cover;
+body > div {
+    
     image-rendering: pixelated;
+    background-position: var(--bg-offset) 0;
+    background-repeat: repeat;
+    -webkit-background-size: cover;
+    background-size: cover;
+
+    -moz-transform: translate3d(0,0,0);
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
 }
 
 .omori-font {
