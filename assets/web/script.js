@@ -35,3 +35,11 @@ async function graphql(body) {
         body
     }).then(async r => await r.json())
 }
+
+window.onload = () => {
+    const query = `{settings{oauth invite}}`
+    graphql(query).then(r => {
+        document.getElementById('login').setAttribute('a', r.data.settings.oauth)
+        document.getElementById('invite').setAttribute('a', r.data.settings.invite)
+    })
+}
