@@ -13,7 +13,7 @@ window.bg_last = 0;
             x -= (x-window.bg_towards)/jumps
             window.bg_last = x
             
-            document.body.style.backgroundPositionX = `${x}%`
+            document.body.setAttribute('style', `background-position-x: ${x}%`)
             lastTime = t
         }
         requestAnimationFrame(f)
