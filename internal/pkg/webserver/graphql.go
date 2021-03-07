@@ -76,7 +76,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				resp, err := http.PostForm("https://discord.com/api/oauth2/token", url.Values{
 					"client_id":     {ws.Meta.Settings[settings.CLIENT_ID]},
-					"client_secret": {ws.Meta.Settings[settings.TOKEN]},
+					"client_secret": {ws.Meta.Settings[settings.CLIENT_SECRET]},
 					"grant_type":    {ws.Meta.Settings[settings.GRANT_TYPE]},
 					"scope":         {ws.Meta.Settings[settings.SCOPE]},
 					"code":          {p.Args["code"].(string)},
