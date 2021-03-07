@@ -16,7 +16,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 
 	lines := meta.Status
 	width := 500
-	height := (50 * len(lines)) + 50
+	height := (40 * len(lines)) + 50
 	dc := gg.NewContext(width, height)
 
 	dc.SetRGB(0, 0, 0)

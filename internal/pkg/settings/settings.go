@@ -13,6 +13,9 @@ const (
 	MONGODB_URL BotSetting = "MONGODB_URL"
 	PORT        BotSetting = "PORT"
 
+	INVITE_URL BotSetting = "INVITE_URL"
+	OAUTH_URL  BotSetting = "OAUTH_URL"
+
 	FEEDBACK_WEBHOOK BotSetting = "FEEDBACK_WEBHOOK"
 	DEBUG_WEBHOOK    BotSetting = "DEBUG_WEBHOOK"
 	DEBUG            BotSetting = "DEBUG"
@@ -21,6 +24,7 @@ const (
 func AllSettings() []BotSetting {
 	return []BotSetting{
 		VERSION, TOKEN, PREFIX, ASSETS, ROLE_COLOR, MONGODB_URL, PORT,
+		INVITE_URL, OAUTH_URL,
 		FEEDBACK_WEBHOOK, DEBUG_WEBHOOK, DEBUG,
 	}
 }

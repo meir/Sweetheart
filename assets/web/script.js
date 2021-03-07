@@ -26,3 +26,12 @@ window.onmousemove = (e) => {
     let x = e.clientX / speed
     window.bg_towards = x
 }
+
+//--
+
+async function graphql(body) {
+    return await fetch('/api', {
+        method: 'POST',
+        body
+    }).then(async r => await r.json())
+}
