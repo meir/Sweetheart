@@ -1,24 +1,28 @@
-window.onload = () => {
-    const fragment = new URLSearchParams(window.location.hash.slice(1));
 
-    if (fragment.has("access_token")) {
-        const accessToken = fragment.get("access_token");
-        const tokenType = fragment.get("token_type");
+window.bg_towards = 0;
+window.bg_last = 0;
 
-        fetch('https://discord.com/api/users/@me', {
-            headers: {
-                authorization: `${tokenType} ${accessToken}`
-            }
-        })
-            .then(res => res.json())
-            .then(response => {
-                const { username, discriminator } = response;
-                document.getElementById('info').innerText += ` ${username}#${discriminator}`;
-            })
-            .catch(console.error);
-
+(() => {
+    let lastTime = 0
+    const second = 1000
+    const frames = 60
+    const jumps = 20
+    let f = (t) => {
+        if((t - lastTime) >= second/frames) {
+            let x = window.bg_last
+            x -= (x-window.bg_towards)/jumps
+            window.bg_last = x
+            
+            document.body.style.backgroundPositionX = `${x}%`
+            lastTime = t
+        }
+        requestAnimationFrame(f)
     }
-    else {
-        document.getElementById('login').style.display = 'block';
-    }
+    f()
+})()
+
+window.onmousemove = (e) => {
+    const speed = 20
+    let x = e.clientX / speed
+    window.bg_towards = x
 }
