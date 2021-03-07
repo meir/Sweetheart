@@ -1,6 +1,9 @@
 package settings
 
-import "os"
+import (
+	"os"
+	"strings"
+)
 
 type BotSetting string
 
@@ -39,7 +42,7 @@ func AllSettings() []BotSetting {
 func GatherSettings() map[BotSetting]string {
 	s := map[BotSetting]string{}
 	for _, v := range AllSettings() {
-		s[v] = os.Getenv(string(v))
+		s[v] = os.Getenv(strings.ReplaceAll(string(v), "\n", ""))
 		println(v, ":", s[v])
 	}
 	return s
