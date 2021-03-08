@@ -96,6 +96,9 @@ func (ws *Webserver) identity() *graphql.Object {
 					if err != nil {
 						return nil, err
 					}
+					if collection == nil {
+						return nil, fmt.Errorf("cant find collection users")
+					}
 					res := collection.FindOne(context.Background(), bson.M{
 						"id": details.ID,
 					}, nil)
