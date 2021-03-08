@@ -53,6 +53,7 @@ func status(meta commandeer.Meta, command string, arguments []string) bool {
 	err = png.Encode(&buf, dc.Image())
 	if err != nil {
 		logging.Warn("Failed to encode buffer into png", err)
+		return false
 	}
 
 	_, err = meta.Session.ChannelFileSend(meta.Message.ChannelID, "sweetheart-status.png", bytes.NewReader(buf.Bytes()))

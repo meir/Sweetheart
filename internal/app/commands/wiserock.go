@@ -57,11 +57,13 @@ func wiserock(meta commandeer.Meta, command string, arguments []string) bool {
 	err := png.Encode(&buf, image)
 	if err != nil {
 		logging.Warn("Failed to encode buffer into png", err)
+		return false
 	}
 
 	rockicon, err := ioutil.ReadFile(path.Join(meta.Settings[settings.ASSETS], "/images/wiserock.png"))
 	if err != nil {
 		logging.Warn("Failed to read file of wiserock.png", err)
+		return false
 	}
 
 	embed := &discordgo.MessageEmbed{

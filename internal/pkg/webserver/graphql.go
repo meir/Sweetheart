@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"path"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -205,19 +204,12 @@ func (ws *Webserver) schema() *graphql.Schema {
 				},
 			})),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "countries.json"))
-				if err != nil {
-					return nil, err
-				}
-
-				var countries map[string]string
-				err = json.Unmarshal(data, &countries)
 
 				var output []struct {
 					Name string `json:"name"`
 					Flag string `json:"flag"`
 				}
-				for k, v := range countries {
+				for k, v := range Countries {
 					output = append(output, struct {
 						Name string `json:"name"`
 						Flag string `json:"flag"`
@@ -335,18 +327,8 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 
-				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "countries.json"))
-				if err != nil {
-					return nil, err
-				}
-
-				var countries map[string]string
-				err = json.Unmarshal(data, &countries)
-				if err != nil {
-					return false, err
-				}
 				country := p.Args["country"].(string)
-				if _, ok := countries[country]; !ok {
+				if _, ok := Countries[country]; !ok {
 					return false, fmt.Errorf("%v is not a usable country", country)
 				}
 

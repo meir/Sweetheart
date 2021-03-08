@@ -19,6 +19,8 @@ type Webserver struct {
 	Schema *graphql.Schema
 }
 
+var Countries map[string]string
+
 func NewWebserver(meta *meta.Meta) *Webserver {
 	return &Webserver{meta, nil}
 }
@@ -28,11 +30,20 @@ func (ws *Webserver) Start() {
 		ws.Meta.Status["Webserver"] = false
 	}()
 
+	data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "countries.json"))
+	if err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(data, &Countries)
+	if err != nil {
+		panic(err)
+	}
+
 	ws.Schema = ws.schema()
 
 	ws.Meta.Status["Webserver"] = true
 
-	err := http.ListenAndServe(fmt.Sprintf(":%v", ws.Meta.Settings[settings.PORT]), http.HandlerFunc(ws.handler))
+	err = http.ListenAndServe(fmt.Sprintf(":%v", ws.Meta.Settings[settings.PORT]), http.HandlerFunc(ws.handler))
 	if err != nil {
 		panic(err)
 	}

@@ -67,6 +67,7 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 		arguments := strings.Split(message, " ")
 		command := strings.Replace(arguments[0], c.prefix, "", 1)
 		args := arguments[1:]
+		var done = false
 
 		if cmd, ok := c.commands[strings.ToLower(command)]; ok {
 			if cmd.arg.Any {
@@ -88,9 +89,12 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			}
 
 		accepted:
-			cmd.cmd(Meta{
+			done = cmd.cmd(Meta{
 				c.meta, msg.Author, msg, cmd.usage,
 			}, command, args)
+			if !done {
+				goto failed
+			}
 			return
 
 		failed:
