@@ -205,7 +205,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 				},
 			})),
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "counties.json"))
+				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "countries.json"))
 				if err != nil {
 					return nil, err
 				}
