@@ -108,6 +108,8 @@ window.onload = () => {
 function authenticated() {
     document.getElementById('no-preview').style.display = 'none'
     document.getElementById('embed').style.display = 'grid'
+    document.getElementById('login').style.display = 'none'
+    document.getElementById('inputs').style.display = 'grid'
     updatePreview()
 }
 
@@ -129,6 +131,14 @@ function updatePreview() {
             if(elem.getAttribute('preview-tmpl')) {
                 prv = elem.getAttribute('preview-tmpl').replace('%v', prv)
             }
+            if(elem.getAttribute('raw') === 'true') {
+                elem.innerText = prv
+                continue
+            }
+            if(elem.tagName.toLowerCase() === "input") {
+                elem.value = prv
+                continue
+            }
             elem.innerHTML = discordMarkdown.toHTML(prv)
         }
     }
@@ -148,11 +158,41 @@ function getDetail(path) {
     let dir = path.split(".")
     let root = user
     for(let i = 0; i < dir.length; i++) {
-        if(root[dir[i]]) {
+        let v = root[dir[i]]
+        if(v != undefined && v != null) {
             root = root[dir[i]]
         }else{
             break
         }
     }
     return root
+}
+
+function reset() {
+    authenticated()
+}
+
+function updateValue(el, path) {
+    let up = {}
+    up[path] = el.value ? el.value : ''
+    user.profile = Object.assign(user.profile, up)
+    updatePreview()
+}
+
+function save() {
+    graphql(JSON.stringify({
+        query: `mutation($about: String! $message: String! $favorite_color: Integer! $timezone: Integer! $gender: String! $pronouns: String! $sexuality: String! $country: String!) {
+                profile(session: "${localStorage.discord_session}" 
+                    about: $about  
+                    description: $message 
+                    favorite_color: $color 
+                    timezone: $timeoffset 
+                    gender: $gender 
+                    pronouns: $pronouns 
+                    sexuality: $sexuality 
+                    country: $country
+                )
+            }`,
+        variables: user.profile
+    })).then(console.log)
 }

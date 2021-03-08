@@ -16,7 +16,22 @@
 					<img src="/images/sweetheart.png" width="50" alt="" />
 					<h1>Sweetheart</h1>
 				</div>
-                <div id="info"></div>
+                <div id="inputs" style="display:none">
+					<label for="input-bio">Bio</label>
+					<input placeholder="Bio" id="input-bio" type="text" class="preview" preview="profile.about" oninput="updateValue(this, 'bio')">
+					<label for="input-bio">Description</label>
+					<textarea style="resize: none;" placeholder="Description" id="input-description" type="text" class="preview" preview="profile.description" raw="true" oninput="updateValue(this, 'description')"></textarea>
+					<label for="input-bio">Sexuality</label>
+					<input placeholder="Sexuality" id="input-sexuality" type="text" class="preview" preview="profile.sexuality" oninput="updateValue(this, 'sexuality')">
+					<label for="input-bio">Gender</label>
+					<input placeholder="Gender" id="input-gender" type="text" class="preview" preview="profile.gender" oninput="updateValue(this, 'gender')">
+					<label for="input-bio">Pronouns</label>
+					<input placeholder="Pronouns" id="input-pronouns" type="text" class="preview" preview="profile.pronouns" oninput="updateValue(this, 'pronouns')">
+					<div class="save">
+						<button class="done" onclick="save()">Done</button>
+						<button class="cancel" onclick="reset()">Cancel</button>
+					</div>
+				</div>
                 <a id="login" href="#">
                     <img src="/images/Discord.svg" height="100%" alt="">
                 </a>
