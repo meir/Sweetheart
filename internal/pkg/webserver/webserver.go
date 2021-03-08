@@ -8,7 +8,6 @@ import (
 	"path"
 	"strings"
 
-	"github.com/go-errors/errors"
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/meta"
@@ -59,12 +58,7 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 		}
 		r := graphql.Do(params)
 		if len(r.Errors) > 0 {
-			errs := []string{}
-			for _, v := range r.Errors {
-				err := v.OriginalError()
-				errs = append(errs, errors.New(err).ErrorStack())
-			}
-			logging.Warn("failed to execute graphql operation, errors:", errs)
+			logging.Warn("failed to execute graphql operation, errors:", r.Errors)
 		}
 		response, err := json.Marshal(r)
 		if err != nil {
