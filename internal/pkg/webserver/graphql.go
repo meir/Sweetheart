@@ -122,7 +122,7 @@ func (ws *Webserver) profile() *graphql.Object {
 				Type: graphql.String,
 			},
 			"favorite_color": &graphql.Field{
-				Type: graphql.String,
+				Type: graphql.Int,
 			},
 			// "socials": &graphql.Field{
 			// 	Type: graphql.String,
