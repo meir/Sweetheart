@@ -283,14 +283,14 @@ func (ws *Webserver) schema() *graphql.Schema {
 				}
 
 				profile := User{
-					About:         p.Args["session"].(string),
-					Description:   p.Args["session"].(string),
-					FavoriteColor: p.Args["session"].(int),
-					Timezone:      p.Args["session"].(string),
-					Country:       p.Args["session"].(string),
-					Gender:        p.Args["session"].(string),
-					Pronouns:      p.Args["session"].(string),
-					Sexuality:     p.Args["session"].(string),
+					About:         p.Args["about"].(string),
+					Description:   p.Args["description"].(string),
+					FavoriteColor: p.Args["favorite_color"].(int),
+					Timezone:      p.Args["timezone"].(string),
+					Country:       p.Args["country"].(string),
+					Gender:        p.Args["gender"].(string),
+					Pronouns:      p.Args["pronouns"].(string),
+					Sexuality:     p.Args["sexuality"].(string),
 				}
 
 				collection, err := ws.getCollection("users")
