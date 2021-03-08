@@ -76,6 +76,10 @@ const dummy_countries = [
     {
         name: "Germany",
         flag: "🇩🇪"
+    }, 
+    {
+        name: "China",
+        flag: "🇨🇳"
     }
 ]
 
@@ -142,6 +146,8 @@ function authenticated() {
         user.profile.favorite_color = parseInt(color.toHEXA().join(""), 16)
         updatePreview()
     })
+    
+    countries.sort((a, b) => a.name.localeCompare(b.name))
     
     let celem = document.getElementById('preview-country')
     for(let i = 0; i < countries.length; i++) {

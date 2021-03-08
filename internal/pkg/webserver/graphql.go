@@ -346,9 +346,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return false, err
 				}
 				country := p.Args["country"].(string)
-				if v, ok := countries[country]; ok {
-					country = fmt.Sprintf("%v %v", country, v)
-				} else {
+				if _, ok := countries[country]; !ok {
 					return false, fmt.Errorf("%v is not a usable country", country)
 				}
 
