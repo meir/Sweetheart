@@ -1,7 +1,10 @@
 package webserver
 
 import (
+	"context"
 	"encoding/base64"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -9,36 +12,35 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type User struct {
-	ID      string
-	Details DiscordDetails
+	ImageID       string   `bson:"image_id"`
+	About         string   `bson:"about"`
+	Description   string   `bson:"description"`
+	FavoriteColor int      `bson:"favorite_color"`
+	Socials       []Social `bson:"socials"`
+	Timezone      string   `bson:"timezone"`
+	Country       string   `bson:"country"`
 
-	ImageID       string
-	About         string
-	Description   string
-	FavoriteColor int
-	Socials       []Social
-	Timezone      string
-	Country       string
-
-	Gender    string
-	Pronouns  string
-	Sexuality string
+	Gender    string `bson:"gender"`
+	Pronouns  string `bson:"pronouns"`
+	Sexuality string `bson:"sexuality"`
 }
 
 type DiscordDetails struct {
-	ID            string `json:"id"`
-	Username      string `json:"username"`
-	Avatar        string `json:"avatar"`
-	Discriminator string `json:"discriminator"`
+	ID            string `json:"id" bson:"id"`
+	Username      string `json:"username" bson:"username"`
+	Avatar        string `json:"avatar" bson:"avatar"`
+	Discriminator string `json:"discriminator" bson:"discriminator"`
+	Profile       User   `json:"user,omitempty" bson:"profile"`
 }
 
 type Social struct {
-	ID     string
-	Name   string
-	Handle string
+	Name   string `bson:"name"`
+	Handle string `bson:"handle"`
 }
 
 func (ws *Webserver) settings() *graphql.Object {
@@ -49,6 +51,71 @@ func (ws *Webserver) settings() *graphql.Object {
 				Type: graphql.String,
 			},
 			"invite": &graphql.Field{
+				Type: graphql.String,
+			},
+		},
+	})
+}
+
+func (ws *Webserver) identity() *graphql.Object {
+	return graphql.NewObject(graphql.ObjectConfig{
+		Name: "Identity",
+		Fields: graphql.Fields{
+			"id": &graphql.Field{
+				Type: graphql.String,
+			},
+			"username": &graphql.Field{
+				Type: graphql.String,
+			},
+			"avatar": &graphql.Field{
+				Type: graphql.String,
+			},
+			"discriminator": &graphql.Field{
+				Type: graphql.String,
+			},
+			"picture": &graphql.Field{
+				Type: graphql.String,
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					details := p.Source.(DiscordDetails)
+					return fmt.Sprintf("https://cdn.discordapp.com/avatars/%v/%v", details.ID, details.Avatar), nil
+				},
+			},
+		},
+	})
+}
+
+func (ws *Webserver) profile() *graphql.Object {
+	return graphql.NewObject(graphql.ObjectConfig{
+		Name: "Profile",
+		Fields: graphql.Fields{
+			"image_id": &graphql.Field{
+				Type: graphql.String,
+			},
+			"about": &graphql.Field{
+				Type: graphql.String,
+			},
+			"description": &graphql.Field{
+				Type: graphql.String,
+			},
+			"favorite_color": &graphql.Field{
+				Type: graphql.String,
+			},
+			// "socials": &graphql.Field{
+			// 	Type: graphql.String,
+			// },
+			"timezone": &graphql.Field{
+				Type: graphql.String,
+			},
+			"country": &graphql.Field{
+				Type: graphql.String,
+			},
+			"gender": &graphql.Field{
+				Type: graphql.String,
+			},
+			"pronouns": &graphql.Field{
+				Type: graphql.String,
+			},
+			"sexuality": &graphql.Field{
 				Type: graphql.String,
 			},
 		},
@@ -93,6 +160,56 @@ func (ws *Webserver) schema() *graphql.Schema {
 				}
 
 				return base64.StdEncoding.EncodeToString(data), err
+			},
+		},
+		"identity": &graphql.Field{
+			Type: ws.identity(),
+			Args: graphql.FieldConfigArgument{
+				"session": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				session := p.Args["session"].(string)
+				jsonString, err := base64.StdEncoding.DecodeString(session)
+				if err != nil {
+					return nil, err
+				}
+
+				var details = DiscordDetails{}
+				err = json.Unmarshal([]byte(jsonString), &details)
+				if err != nil {
+					return nil, err
+				}
+
+				database := ws.Meta.Database.Database("users")
+				collection := database.Collection("users")
+				upsert := true
+				details.Profile = User{
+					About:         "I'm absolutely amazing!",
+					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing abviously!", details.Username),
+					FavoriteColor: 0xffffff,
+					Socials:       []Social{},
+					Timezone:      "CET",
+					Country:       "Netherlands",
+
+					Gender:    "???",
+					Pronouns:  "???/???/???",
+					Sexuality: "???",
+				}
+				_, err = collection.UpdateOne(context.Background(), bson.M{
+					"ID": details.ID,
+				}, bson.M{
+					"$set": bson.M{
+						"username":      details.Username,
+						"avatar":        details.Avatar,
+						"discriminator": details.Discriminator,
+					},
+					"$setOnInsert": details,
+				}, &options.UpdateOptions{
+					Upsert: &upsert,
+				})
+				return details, err
 			},
 		},
 	}
