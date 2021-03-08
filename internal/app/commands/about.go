@@ -67,6 +67,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 	}
 
 	embed := &discordgo.MessageEmbed{
+		Type: discordgo.EmbedTypeRich,
 		Author: &discordgo.MessageEmbedAuthor{
 			Name:    fmt.Sprintf("%v#%v", details.Username, details.Discriminator),
 			IconURL: image,
