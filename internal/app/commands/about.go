@@ -59,7 +59,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 
 	image := fmt.Sprintf("https://cdn.discordapp.com/avatars/%v/%v", details.ID, details.Avatar)
 	t := time.Now().UTC()
-	t.Add(time.Duration(int64(time.Minute) * int64(details.Profile.Timezone)))
+	t = t.Add(time.Duration(int64(time.Minute) * int64(-details.Profile.Timezone)))
 
 	socials := ""
 	for _, v := range details.Profile.Socials {
