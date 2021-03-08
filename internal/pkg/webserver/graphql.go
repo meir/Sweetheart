@@ -94,11 +94,12 @@ func (ws *Webserver) identity() *graphql.Object {
 					database := ws.Meta.Database.Database("sweetheart")
 					collection := database.Collection("users")
 					_ = collection
-					// res := collection.FindOne(context.Background(), bson.M{
-					// 	"id": details.ID,
-					// }, nil)
-					// var profile User
-					// err := res.Decode(&profile)
+					res := collection.FindOne(context.Background(), bson.M{
+						"id": details.ID,
+					}, nil)
+					var profile User
+					err := res.Decode(&profile)
+					logging.Warn(err, profile)
 					// if err != nil {
 					// 	return nil, err
 					// }
