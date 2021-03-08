@@ -27,6 +27,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 	}
 
 	id := arguments[0]
+	id = strings.ReplaceAll(id, "!", "")
 
 	if !reg.MatchString(id) {
 		logging.Debug("did not match regex", id)
