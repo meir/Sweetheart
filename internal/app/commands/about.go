@@ -12,6 +12,7 @@ import (
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/webserver"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var reg = regexp.MustCompile(`(?m)^<@([0-9]{1,})>$`)
@@ -41,7 +42,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 	res := collection.FindOne(context.Background(), bson.M{
 		"id": id,
 	})
-	if res == nil {
+	if res == nil || res.Err() == mongo.ErrNoDocuments {
 		_, err := meta.Session.ChannelMessageSend(meta.Message.ChannelID, fmt.Sprintf("Could not find the profile of this user\nYou can make your own profile on https://sweetheart.flamingo.dev/"))
 		if err != nil {
 			logging.Warn("Failed to send message", err)
