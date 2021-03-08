@@ -84,7 +84,8 @@ func (ws *Webserver) identity() *graphql.Object {
 				},
 			},
 			"profile": &graphql.Field{
-				Type: ws.profile(),
+				// Type: ws.profile(),
+				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					details := p.Source.(*DiscordDetails)
 					if details == nil {
@@ -92,16 +93,17 @@ func (ws *Webserver) identity() *graphql.Object {
 					}
 					database := ws.Meta.Database.Database("sweetheart")
 					collection := database.Collection("users")
-
-					res := collection.FindOne(context.Background(), bson.M{
-						"id": details.ID,
-					}, nil)
-					var profile User
-					err := res.Decode(&profile)
-					if err != nil {
-						return nil, err
-					}
-					return &profile, nil
+					_ = collection
+					// res := collection.FindOne(context.Background(), bson.M{
+					// 	"id": details.ID,
+					// }, nil)
+					// var profile User
+					// err := res.Decode(&profile)
+					// if err != nil {
+					// 	return nil, err
+					// }
+					return "test", nil
+					// return &profile, nil
 				},
 			},
 		},
