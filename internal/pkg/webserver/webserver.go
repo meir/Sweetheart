@@ -62,7 +62,7 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 			errs := []string{}
 			for _, v := range r.Errors {
 				err := v.OriginalError()
-				errs = append(errs, err.(*errors.Error).ErrorStack())
+				errs = append(errs, errors.New(err).ErrorStack())
 			}
 			logging.Warn("failed to execute graphql operation, errors:", errs)
 		}
