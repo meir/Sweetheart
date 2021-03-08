@@ -248,31 +248,49 @@ func (ws *Webserver) schema() *graphql.Schema {
 			Type: graphql.Boolean,
 			Args: graphql.FieldConfigArgument{
 				"session": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"about": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"description": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"favorite_color": &graphql.ArgumentConfig{
-					Type: graphql.Int,
+					Type: &graphql.NonNull{
+						OfType: graphql.Int,
+					},
 				},
 				"timezone": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"country": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"gender": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"pronouns": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 				"sexuality": &graphql.ArgumentConfig{
-					Type: graphql.String,
+					Type: &graphql.NonNull{
+						OfType: graphql.String,
+					},
 				},
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
@@ -295,7 +313,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 
 				collection, err := ws.getCollection("users")
 				if err != nil {
-					return nil, err
+					return false, err
 				}
 
 				_, err = collection.UpdateOne(context.Background(), bson.M{
@@ -303,7 +321,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 				}, bson.M{
 					"profile": profile,
 				})
-				return nil, err
+				return true, err
 			},
 		},
 	}
