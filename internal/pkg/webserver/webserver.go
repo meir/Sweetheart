@@ -58,7 +58,11 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 		}
 		r := graphql.Do(params)
 		if len(r.Errors) > 0 {
-			logging.Warn("failed to execute graphql operation, errors:", r.Errors)
+			errors := []error{}
+			for _, v := range r.Errors {
+				errors = append(errors, v.OriginalError())
+			}
+			logging.Warn("failed to execute graphql operation, errors:", errors)
 		}
 		response, err := json.Marshal(r)
 		if err != nil {
