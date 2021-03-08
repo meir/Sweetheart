@@ -101,7 +101,7 @@ func (ws *Webserver) identity() *graphql.Object {
 					if err != nil {
 						return nil, err
 					}
-					return profile, nil
+					return &profile, nil
 				},
 			},
 		},
