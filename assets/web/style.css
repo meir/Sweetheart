@@ -513,6 +513,7 @@ div.save {
     -webkit-box-direction: reverse;
     -ms-flex-direction: row-reverse;
     flex-direction: row-reverse;
+    outline: none;
 }
 
 button.done {
@@ -540,6 +541,7 @@ button.done {
     -webkit-user-select: none;
     -moz-user-select: none;
     user-select: none;
+    outline: none;
 }
 
 button.cancel {
@@ -571,4 +573,5 @@ button.cancel {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    outline: none;
 }

@@ -181,18 +181,20 @@ function updateValue(el, path) {
 
 function save() {
     graphql(JSON.stringify({
-        query: `mutation($about: String! $message: String! $favorite_color: Int! $timeoffset: Int! $gender: String! $pronouns: String! $sexuality: String! $country: String!) {
+        query: `mutation($about: String! $description: String! $favorite_color: Int! $timezone: Int! $gender: String! $pronouns: String! $sexuality: String! $country: String!) {
                 profile(session: "${localStorage.discord_session}" 
                     about: $about  
-                    description: $message 
+                    description: $description 
                     favorite_color: $favorite_color 
-                    timezone: $timeoffset 
+                    timezone: $timezone 
                     gender: $gender 
                     pronouns: $pronouns 
                     sexuality: $sexuality 
                     country: $country
                 )
             }`,
-        variables: user.profile
+        variables: Object.assign(user.profile, {
+            timezone: new Date().getTimezoneOffset()
+        })
     })).then(console.log)
 }
