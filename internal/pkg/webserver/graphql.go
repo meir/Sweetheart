@@ -171,13 +171,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 			},
 			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 				session := p.Args["session"].(string)
-				jsonString, err := base64.StdEncoding.DecodeString(session)
-				if err != nil {
-					return nil, err
-				}
-
-				var details = DiscordDetails{}
-				err = json.Unmarshal([]byte(jsonString), &details)
+				details, err := ws.getUserDetails(session)
 				if err != nil {
 					return nil, err
 				}
@@ -224,4 +218,46 @@ func (ws *Webserver) schema() *graphql.Schema {
 		logging.Warn("failed to create new schema, error: %v", err)
 	}
 	return &schema
+}
+
+type Session struct {
+	AccessToken string `json:"access_token"`
+	TokenType   string `json:"token_type"`
+}
+
+func (ws *Webserver) getUserDetails(session string) (*DiscordDetails, error) {
+	data, err := base64.StdEncoding.DecodeString(session)
+	if err != nil {
+		return nil, err
+	}
+
+	var ses Session
+	err = json.Unmarshal(data, &ses)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, "https://discord.com/api/users/@me", nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("Authorization", fmt.Sprintf("%v %v", ses.TokenType, ses.AccessToken))
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+
+	det, err := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	var details DiscordDetails
+	err = json.Unmarshal(det, &details)
+	if err != nil {
+		return nil, err
+	}
+	return &details, err
 }
