@@ -101,7 +101,7 @@ func (ws *Webserver) identity() *graphql.Object {
 					}
 					res := collection.FindOne(context.Background(), bson.M{
 						"id": details.ID,
-					}, nil)
+					})
 					if res == nil {
 						return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
 					}
