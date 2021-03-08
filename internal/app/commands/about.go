@@ -65,6 +65,9 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 	for _, v := range details.Profile.Socials {
 		socials += fmt.Sprintf("> __%v:__ %v\n", v.Name, v.Handle)
 	}
+	if socials == "" {
+		socials = "no socials."
+	}
 
 	embed := &discordgo.MessageEmbed{
 		Type: discordgo.EmbedTypeRich,
