@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = false
+const force_auth = true
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
@@ -110,10 +110,29 @@ function authenticated() {
     document.getElementById('embed').style.display = 'grid'
     document.getElementById('login').style.display = 'none'
     document.getElementById('inputs').style.display = 'grid'
+    let picker = Pickr.create({
+        el: '#preview-color',
+        theme: 'nano',
+        default: `#${user.profile.favorite_color.toString(16)}`,
+        components: {
+            preview: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                input: true,
+                save: true,
+            }
+        }
+    })
+    picker.on('save', (color, instance) => {
+        user.profile.favorite_color = parseInt(color.toHEXA().join(""), 16)
+        updatePreview()
+    })
     updatePreview()
 }
 
 function updatePreview() {
+    user.profile.timezone = new Date().toTimeString().substring(0, 5)
     const elems = document.getElementsByClassName("preview")
     for(let i = 0; i < elems.length; i++) {
         let elem = elems[i]

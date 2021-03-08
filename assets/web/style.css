@@ -247,6 +247,7 @@ body > div {
     padding: 4px;
     padding-bottom: 0px;
     margin: 5px;
+    margin-top: 20px;
     margin-left: auto;
     margin-right: auto;
     display: block;
@@ -542,6 +543,11 @@ button.done {
     -moz-user-select: none;
     user-select: none;
     outline: none;
+    cursor: pointer;
+}
+
+button.done:hover {
+    background-color: #677bc4;
 }
 
 button.cancel {
@@ -574,4 +580,36 @@ button.cancel {
     -ms-user-select: none;
     user-select: none;
     outline: none;
+    cursor: pointer;
+}
+
+button.cancel:hover {
+    text-decoration: underline;
+}
+
+.pcr-app {
+    background-color: #2C2F33 !important;
+    padding: 5px;
+}
+
+.pcr-app .pcr-interaction .pcr-save, .pcr-app .pcr-interaction .pcr-type.active {
+    background-color:#7289DA !important;
+    outline: none;
+}
+
+.pcr-app[data-theme=nano] .pcr-selection .pcr-color-preview .pcr-current-color:before {
+    background: none !important;
+    outline: none;
+}
+
+.pickr {
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    width: fit-content;
+    margin-bottom: 10px;
+    background-color: rgba(0,0,0,.1);
+    padding: 3px;
+}
+
+.pickr .pcr-button:before {
+    background: none !important;
 }

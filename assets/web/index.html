@@ -6,6 +6,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Sweetheart</title>
 		<link rel="stylesheet" href="/style.css" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css"/>
+		<script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
         <script src="/discordMarkdown.js"></script>
         <script src="/script.js"></script>
 	</head>
@@ -19,6 +21,8 @@
                 <div id="inputs" style="display:none">
 					<label for="input-bio">Bio</label>
 					<input placeholder="Bio" id="input-bio" type="text" class="preview" preview="profile.about" oninput="updateValue(this, 'bio')">
+					<label for="preview-color">Favorite Color</label>
+					<div id="preview-color"></div>
 					<label for="input-bio">Description</label>
 					<textarea style="resize: none;" placeholder="Description" id="input-description" type="text" class="preview" preview="profile.description" raw="true" oninput="updateValue(this, 'description')"></textarea>
 					<label for="input-bio">Sexuality</label>
@@ -99,9 +103,8 @@
 										</div>
 										<div class="footer">
 											<span class="preview" preview="profile.country"></span>
-											<span class="preview" preview="profile.timezone" preview-tmpl=" (%v)"></span>
 											<span class="divider">•</span>
-											<span>17:22</span>
+											<span class="preview" preview="profile.timezone"></span>
 										</div>
 										<div class="thumbnail">
 											<img src="#" alt="" class="preview" preview="picture">
