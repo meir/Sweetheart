@@ -13,6 +13,7 @@ import (
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
@@ -84,27 +85,25 @@ func (ws *Webserver) identity() *graphql.Object {
 				},
 			},
 			"profile": &graphql.Field{
-				// Type: ws.profile(),
-				Type: graphql.String,
+				Type: ws.profile(),
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					details := p.Source.(*DiscordDetails)
 					if details == nil {
 						return nil, nil
 					}
-					database := ws.Meta.Database.Database("sweetheart")
-					collection := database.Collection("users")
-					_ = collection
+					collection, err := ws.getCollection("users")
+					if err != nil {
+						return nil, err
+					}
 					res := collection.FindOne(context.Background(), bson.M{
 						"id": details.ID,
 					}, nil)
 					var profile User
-					err := res.Decode(&profile)
-					logging.Warn(err, profile)
-					// if err != nil {
-					// 	return nil, err
-					// }
-					return "test", nil
-					// return &profile, nil
+					err = res.Decode(&profile)
+					if err != nil {
+						return nil, err
+					}
+					return &profile, nil
 				},
 			},
 		},
@@ -203,8 +202,10 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 
-				database := ws.Meta.Database.Database("sweetheart")
-				collection := database.Collection("users")
+				collection, err := ws.getCollection("users")
+				if err != nil {
+					return nil, err
+				}
 				upsert := true
 				details.Profile = User{
 					About:         "I'm absolutely amazing!",
@@ -287,4 +288,17 @@ func (ws *Webserver) getUserDetails(session string) (*DiscordDetails, error) {
 		return nil, err
 	}
 	return &details, err
+}
+
+func (ws *Webserver) getCollection(name string) (*mongo.Collection, error) {
+	database := ws.Meta.Database.Database("sweetheart")
+	col := database.Collection(name)
+	if col == nil {
+		err := database.CreateCollection(context.Background(), name)
+		if err != nil {
+			return nil, err
+		}
+		col = database.Collection(name)
+	}
+	return col, nil
 }
