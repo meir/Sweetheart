@@ -205,7 +205,10 @@ func (ws *Webserver) schema() *graphql.Schema {
 						"avatar":        details.Avatar,
 						"discriminator": details.Discriminator,
 					},
-					"$setOnInsert": details,
+					"$setOnInsert": bson.M{
+						"id":      details.ID,
+						"profile": details.Profile,
+					},
 				}, &options.UpdateOptions{
 					Upsert: &upsert,
 				})
