@@ -52,10 +52,22 @@ func (ws *Webserver) handler(w http.ResponseWriter, r *http.Request) {
 			logging.Warn("failed to read body of an API request.", err)
 			return
 		}
+
 		params := graphql.Params{
 			Schema:        *ws.Schema,
 			RequestString: string(body),
 		}
+
+		var v struct {
+			Query     string
+			Variables map[string]interface{}
+		}
+		err = json.Unmarshal(body, &v)
+		if err == nil {
+			params.RequestString = v.Query
+			params.VariableValues = v.Variables
+		}
+
 		r := graphql.Do(params)
 		if len(r.Errors) > 0 {
 			logging.Warn("failed to execute graphql operation, errors:", r.Errors)
