@@ -21,7 +21,7 @@ type User struct {
 	ImageID       string   `bson:"image_id"`
 	About         string   `bson:"about"`
 	Description   string   `bson:"description"`
-	FavoriteColor int      `bson:"favorite_color"`
+	FavoriteColor int      `json:"favorite_color" bson:"favorite_color"`
 	Socials       []Social `bson:"socials"`
 	Timezone      string   `bson:"timezone"`
 	Country       string   `bson:"country"`
