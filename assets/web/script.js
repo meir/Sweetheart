@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = true
+const force_auth = false
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
