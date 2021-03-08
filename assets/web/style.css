@@ -613,3 +613,21 @@ button.cancel:hover {
 .pickr .pcr-button:before {
     background: none !important;
 }
+
+#inputs select#preview-country {
+    font-size: 16px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 3px;
+    color: rgb(220, 221, 222);
+    background-color: rgba(0,0,0,.1);
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    -webkit-transition: border-color .2s ease-in-out;
+    padding: 10px;
+    height: 40px;
+    margin-bottom: 10px;
+    font-family: 'Discord';
+    outline: none;
+    padding-top: 8px;
+}

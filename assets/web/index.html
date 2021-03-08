@@ -23,13 +23,15 @@
 					<input placeholder="Bio" id="input-bio" type="text" class="preview" preview="profile.about" oninput="updateValue(this, 'bio')">
 					<label for="preview-color">Favorite Color</label>
 					<div id="preview-color"></div>
-					<label for="input-bio">Description</label>
+					<label for="preview-country">Country</label>
+					<select id="preview-country" placeholder="Country" onchange="updateValue(this, 'country')"></select>
+					<label for="input-description">Description</label>
 					<textarea style="resize: none;" placeholder="Description" id="input-description" type="text" class="preview" preview="profile.description" raw="true" oninput="updateValue(this, 'description')"></textarea>
-					<label for="input-bio">Sexuality</label>
+					<label for="input-sexuality">Sexuality</label>
 					<input placeholder="Sexuality" id="input-sexuality" type="text" class="preview" preview="profile.sexuality" oninput="updateValue(this, 'sexuality')">
-					<label for="input-bio">Gender</label>
+					<label for="input-gender">Gender</label>
 					<input placeholder="Gender" id="input-gender" type="text" class="preview" preview="profile.gender" oninput="updateValue(this, 'gender')">
-					<label for="input-bio">Pronouns</label>
+					<label for="input-pronouns">Pronouns</label>
 					<input placeholder="Pronouns" id="input-pronouns" type="text" class="preview" preview="profile.pronouns" oninput="updateValue(this, 'pronouns')">
 					<div class="save">
 						<button class="done" onclick="save()">Done</button>

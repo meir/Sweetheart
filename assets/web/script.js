@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = false
+const force_auth = true
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
@@ -68,7 +68,19 @@ const dummy = {
     }
 }
 
+const dummy_countries = [
+    {
+        name: "Netherlands",
+        flag: "🇳🇱"
+    },
+    {
+        name: "Germany",
+        flag: "🇩🇪"
+    }
+]
+
 let user = {}
+let countries = []
 
 window.onload = () => {
     document.getElementById("main").setAttribute('style', 'background-image: url(/images/Space_parallax.png)')
@@ -81,13 +93,15 @@ window.onload = () => {
     if(force_auth) {
         console.log('authenticated')
         user = dummy
+        countries = dummy_countries
         authenticated()
         return
     }
     if(localStorage.discord_session) {
         console.log('authenticated')
-        graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color timezone country gender pronouns sexuality } }}`).then(r => {
+        graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color timezone country gender pronouns sexuality } } countries { name flag }}`).then(r => {
             user = r.data.identity
+            countries = r.data.countries
             authenticated()
         })
     }else{
@@ -128,6 +142,15 @@ function authenticated() {
         user.profile.favorite_color = parseInt(color.toHEXA().join(""), 16)
         updatePreview()
     })
+    
+    let celem = document.getElementById('preview-country')
+    for(let i = 0; i < countries.length; i++) {
+        let c = document.createElement("option")
+        c.innerText = `${countries[i].name} ${countries[i].flag}`
+        c.value = countries[i].name
+        celem.appendChild(c)
+    }
+    
     updatePreview()
 }
 
@@ -183,6 +206,9 @@ function getDetail(path) {
         }else{
             break
         }
+    }
+    if(path.endsWith("country")) {
+        root += ` ${countries.find((e) => e.name === root).flag}`
     }
     return root
 }
