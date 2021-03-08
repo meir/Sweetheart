@@ -85,8 +85,7 @@ func (ws *Webserver) identity() *graphql.Object {
 				},
 			},
 			"profile": &graphql.Field{
-				// Type: ws.profile(),
-				Type: graphql.String,
+				Type: ws.profile(),
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					details := p.Source.(*DiscordDetails)
 					if details == nil {
@@ -96,21 +95,18 @@ func (ws *Webserver) identity() *graphql.Object {
 					if err != nil {
 						return nil, err
 					}
-					if collection == nil {
-						return nil, fmt.Errorf("cant find collection users")
-					}
 					res := collection.FindOne(context.Background(), bson.M{
 						"id": details.ID,
 					})
 					if res == nil {
 						return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
 					}
-					// var profile DiscordDetails
-					// err = res.Decode(&profile)
-					// if err != nil {
-					// 	return nil, err
-					// }
-					return "test", nil
+					var profile DiscordDetails
+					err = res.Decode(&profile)
+					if err != nil {
+						return nil, err
+					}
+					return &profile.Profile, nil
 				},
 			},
 		},
