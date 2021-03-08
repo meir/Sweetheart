@@ -77,7 +77,10 @@ window.onload = () => {
     }
     if(localStorage.discord_session) {
         console.log('authenticated')
-        authenticated()
+        graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color timezone country gender pronouns sexuality } }}`).then(r => {
+            user = r.data.identity
+            authenticated()
+        })
     }else{
         const urlParams = new URLSearchParams(window.location.search);
         const discordCode = urlParams.get('code');
