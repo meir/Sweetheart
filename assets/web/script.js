@@ -49,7 +49,12 @@ const dummy = {
         about: "I'm absolutely amazing!",
         description: "Hi, i'm **Sweetheart** and i'm absolutely amazing *obviously*!",
         favorite_color: 0xffffff,
-        socials: [],
+        socials: [
+            {
+                name: 'Discord',
+                handle: 'Sweetheart#1857'
+            }
+        ],
         timezone: "CET",
         country: "Netherlands",
         
@@ -116,7 +121,11 @@ function updatePreview() {
                 elem.src = getDetail(elem.getAttribute("preview"))
                 continue
             }
-            elem.innerHTML = discordMarkdown.toHTML(getDetail(elem.getAttribute("preview")))
+            let prv = getDetail(elem.getAttribute("preview"))
+            if(elem.getAttribute('preview-tmpl')) {
+                prv = elem.getAttribute('preview-tmpl').replace('%v', prv)
+            }
+            elem.innerHTML = discordMarkdown.toHTML(prv)
         }
     }
 }

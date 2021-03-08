@@ -387,5 +387,40 @@ strong {
     font-size: 0.875rem;
     line-height: 1.125rem;
     color: rgb(220, 221, 222);
-    white-space: pre-line;
+}
+
+#embed > div > div div.footer {
+    min-width: 0px;
+    margin: 8px 0px 0px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    grid-area: auto / 1 / auto / 3;
+}
+
+#embed > div > div div.footer span {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: rgb(220, 221, 222);
+    line-height: 1rem;
+    text-shadow: 0px 0.2px, 0.2px 0px, 0.2px 0.2px;
+    white-space: break-spaces;
+}
+
+#embed > div > div div.footer span.divider {
+    display: inline-block;
+    margin: 0px 4px;
+}
+
+#embed > div > div div.thumbnail {
+    margin: 8px 0px 0px 16px;
+    grid-area: 1 / 2 / 8 / 3;
+    justify-self: end;
+    cursor: pointer;
+}
+
+#embed > div > div div.thumbnail img {
+    max-width: 80px;
+    max-height: 80px;
+    border-radius: 4px;
 }
