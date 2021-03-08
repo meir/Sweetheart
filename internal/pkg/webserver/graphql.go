@@ -96,13 +96,12 @@ func (ws *Webserver) identity() *graphql.Object {
 					if err != nil {
 						return nil, err
 					}
-					_ = collection
-					// res := collection.FindOne(context.Background(), bson.M{
-					// 	"id": details.ID,
-					// }, nil)
-					// if res == nil {
-					// 	return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
-					// }
+					res := collection.FindOne(context.Background(), bson.M{
+						"id": details.ID,
+					}, nil)
+					if res == nil {
+						return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
+					}
 					// var profile DiscordDetails
 					// err = res.Decode(&profile)
 					// if err != nil {
