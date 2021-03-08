@@ -23,7 +23,7 @@ type User struct {
 	Description   string   `bson:"description"`
 	FavoriteColor int      `json:"favorite_color" bson:"favorite_color"`
 	Socials       []Social `bson:"socials"`
-	Timezone      string   `bson:"timezone"`
+	Timezone      int      `bson:"timezone"`
 	Country       string   `bson:"country"`
 
 	Gender    string `bson:"gender"`
@@ -133,7 +133,7 @@ func (ws *Webserver) profile() *graphql.Object {
 			// 	Type: graphql.String,
 			// },
 			"timezone": &graphql.Field{
-				Type: graphql.String,
+				Type: graphql.Int,
 			},
 			"country": &graphql.Field{
 				Type: graphql.String,
@@ -215,7 +215,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing obviously!", details.Username),
 					FavoriteColor: 0xffffff,
 					Socials:       []Social{},
-					Timezone:      "CET",
+					Timezone:      -60,
 					Country:       "Netherlands",
 
 					Gender:    "???",
@@ -269,7 +269,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 				},
 				"timezone": &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
-						OfType: graphql.String,
+						OfType: graphql.Int,
 					},
 				},
 				"country": &graphql.ArgumentConfig{
@@ -304,7 +304,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					About:         p.Args["about"].(string),
 					Description:   p.Args["description"].(string),
 					FavoriteColor: p.Args["favorite_color"].(int),
-					Timezone:      p.Args["timezone"].(string),
+					Timezone:      p.Args["timezone"].(int),
 					Country:       p.Args["country"].(string),
 					Gender:        p.Args["gender"].(string),
 					Pronouns:      p.Args["pronouns"].(string),

@@ -59,7 +59,7 @@ const dummy = {
                 handle: 'https://sweetheart.flamingo.dev/'
             }
         ],
-        timezone: "CET",
+        timezone: new Date().toTimeString().substring(0, 5),
         country: "Netherlands",
         
         gender: "???",
