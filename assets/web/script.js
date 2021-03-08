@@ -40,6 +40,27 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
+const force_auth = true
+const dummy = {
+    username: "Sweetheart",
+    discriminator: "1857",
+    picture: "/images/sweetheart.png",
+    profile: {
+        about: "I'm absolutely amazing!",
+        description: "Hi, i'm **Sweetheart** and i'm absolutely amazing *obviously*!",
+        favorite_color: 0xffffff,
+        socials: [],
+        timezone: "CET",
+        country: "Netherlands",
+        
+        gender: "???",
+        pronouns: "???/???/???",
+        sexuality: "???"
+    }
+}
+
+let user = {}
+
 window.onload = () => {
     document.getElementById("main").setAttribute('style', 'background-image: url(/images/Space_parallax.png)')
     const query = `{settings{oauth invite}}`
@@ -48,8 +69,15 @@ window.onload = () => {
         document.getElementById('invite').setAttribute('href', r.data.settings.invite)
     })
     
+    if(force_auth) {
+        console.log('authenticated')
+        user = dummy
+        authenticated()
+        return
+    }
     if(localStorage.discord_session) {
         console.log('authenticated')
+        authenticated()
     }else{
         const urlParams = new URLSearchParams(window.location.search);
         const discordCode = urlParams.get('code');
@@ -63,4 +91,42 @@ window.onload = () => {
             })
         }
     }
+}
+
+function authenticated() {
+    document.getElementById('no-preview').style.display = 'none'
+    document.getElementById('embed').style.display = 'grid'
+    updatePreview()
+}
+
+function updatePreview() {
+    const elems = document.getElementsByClassName("preview")
+    for(let i = 0; i < elems.length; i++) {
+        let elem = elems[i]
+        if(!elem) continue
+        if(elem.getAttribute('preview-attr')) {
+            let val = getDetail(elem.getAttribute("preview"))
+            val = typeof val == "number" ? `#${val.toString(16)}` : val
+            elem.style[elem.getAttribute('preview-attr')] = val
+        }else{
+            if(elem.tagName.toLowerCase() === "img") {
+                elem.src = getDetail(elem.getAttribute("preview"))
+                continue
+            }
+            elem.innerHTML = discordMarkdown.toHTML(getDetail(elem.getAttribute("preview")))
+        }
+    }
+}
+
+function getDetail(path) {
+    let dir = path.split(".")
+    let root = user
+    for(let i = 0; i < dir.length; i++) {
+        if(root[dir[i]]) {
+            root = root[dir[i]]
+        }else{
+            break
+        }
+    }
+    return root
 }

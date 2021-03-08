@@ -83,6 +83,27 @@ func (ws *Webserver) identity() *graphql.Object {
 					return fmt.Sprintf("https://cdn.discordapp.com/avatars/%v/%v", details.ID, details.Avatar), nil
 				},
 			},
+			"profile": &graphql.Field{
+				Type: ws.profile(),
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+					details := p.Source.(*DiscordDetails)
+					if details == nil {
+						return nil, nil
+					}
+					database := ws.Meta.Database.Database("sweetheart")
+					collection := database.Collection("users")
+
+					res := collection.FindOne(context.Background(), bson.M{
+						"id": details.ID,
+					}, nil)
+					var profile User
+					err := res.Decode(&profile)
+					if err != nil {
+						return nil, err
+					}
+					return profile, nil
+				},
+			},
 		},
 	})
 }
@@ -179,7 +200,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 
-				database := ws.Meta.Database.Database("users")
+				database := ws.Meta.Database.Database("sweetheart")
 				collection := database.Collection("users")
 				upsert := true
 				details.Profile = User{
