@@ -101,12 +101,12 @@ func (ws *Webserver) identity() *graphql.Object {
 					if res == nil {
 						return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
 					}
-					var profile User
+					var profile DiscordDetails
 					err = res.Decode(&profile)
 					if err != nil {
 						return nil, err
 					}
-					return &profile, nil
+					return &profile.Profile, nil
 				},
 			},
 		},
