@@ -257,7 +257,7 @@ body > div {
 }
 
 .main-preview {
-    width: 60%;
+    width: 75%;
     margin: auto auto;
     padding: 10px;
     border-radius: 5px;
@@ -339,6 +339,7 @@ strong {
     color: rgb(255, 255, 255);
     white-space: pre-wrap;
     display: inline-block;
+    text-shadow: 0px 0.4px, 0.4px 0px, 0.4px 0.4px;
 }
 
 #embed > div > div div.author > img {
@@ -347,6 +348,15 @@ strong {
     margin: 0px 8px 0px 0px;
     object-fit: contain;
     border-radius: 50%;
+}
+
+#embed a {
+    color: rgb(0, 176, 244);
+    text-decoration: none;
+}
+
+#embed a:hover {
+    text-decoration: underline;
 }
 
 #embed > div > div div.content {
@@ -381,6 +391,23 @@ strong {
 
 #embed > div > div div.content div div.text {
     min-width: 0px;
+}
+
+#embed > div > div div.content div div.text div.quote {
+    display: flex;
+}
+
+#embed > div > div div.content div div.text div.quote > div.pre {
+    min-width: 4px;
+    max-width: 4px;
+    border-radius: 4px;
+    background: rgb(79, 84, 92);
+}
+
+#embed > div > div div.content div div.text div.quote div#preview-socials {
+    padding: 0px 8px 0px 12px;
+    margin: 0px;
+    text-indent: 0px;
 }
 
 #embed > div > div div.content div div.text div {

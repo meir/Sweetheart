@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = false
+const force_auth = true
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
@@ -53,6 +53,10 @@ const dummy = {
             {
                 name: 'Discord',
                 handle: 'Sweetheart#1857'
+            },
+            {
+                name: 'Website',
+                handle: 'https://sweetheart.flamingo.dev/'
             }
         ],
         timezone: "CET",
@@ -128,6 +132,16 @@ function updatePreview() {
             elem.innerHTML = discordMarkdown.toHTML(prv)
         }
     }
+    
+    const elem = document.getElementById("preview-socials")
+    let social = ''
+    if(!user.profile.socials) return
+    for(let i = 0; i < user.profile.socials.length; i++) {
+        let s = user.profile.socials[i]
+        social += `> __${s.name}:__ ${s.handle}\n`
+    }
+    elem.innerHTML = discordMarkdown.toHTML(social)
+    
 }
 
 function getDetail(path) {
