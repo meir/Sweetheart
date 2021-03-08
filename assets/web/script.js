@@ -156,6 +156,7 @@ function authenticated() {
         c.value = countries[i].name
         celem.appendChild(c)
     }
+    celem.value = user.profile.country
     
     updatePreview()
 }
