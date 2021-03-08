@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -191,6 +192,40 @@ func (ws *Webserver) schema() *graphql.Schema {
 				return base64.StdEncoding.EncodeToString(data), err
 			},
 		},
+		"countries": &graphql.Field{
+			Type: graphql.NewList(graphql.NewObject(graphql.ObjectConfig{
+				Name: "Country",
+				Fields: graphql.Fields{
+					"name": &graphql.Field{
+						Type: graphql.String,
+					},
+					"flag": &graphql.Field{
+						Type: graphql.String,
+					},
+				},
+			})),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "counties.json"))
+				if err != nil {
+					return nil, err
+				}
+
+				var countries map[string]string
+				err = json.Unmarshal(data, &countries)
+
+				var output []struct {
+					Name string `json:"name"`
+					Flag string `json:"flag"`
+				}
+				for k, v := range countries {
+					output = append(output, struct {
+						Name string `json:"name"`
+						Flag string `json:"flag"`
+					}{k, v})
+				}
+				return output, nil
+			},
+		},
 		"identity": &graphql.Field{
 			Type: ws.identity(),
 			Args: graphql.FieldConfigArgument{
@@ -300,12 +335,29 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 
+				data, err := ioutil.ReadFile(path.Join(ws.Meta.Settings[settings.ASSETS], "config", "counties.json"))
+				if err != nil {
+					return nil, err
+				}
+
+				var countries map[string]string
+				err = json.Unmarshal(data, &countries)
+				if err != nil {
+					return false, err
+				}
+				country := p.Args["country"].(string)
+				if v, ok := countries[country]; ok {
+					country = fmt.Sprintf("%v %v", country, v)
+				} else {
+					return false, fmt.Errorf("%v is not a usable country", country)
+				}
+
 				profile := User{
 					About:         p.Args["about"].(string),
 					Description:   p.Args["description"].(string),
 					FavoriteColor: p.Args["favorite_color"].(int),
 					Timezone:      p.Args["timezone"].(int),
-					Country:       p.Args["country"].(string),
+					Country:       country,
 					Gender:        p.Args["gender"].(string),
 					Pronouns:      p.Args["pronouns"].(string),
 					Sexuality:     p.Args["sexuality"].(string),
