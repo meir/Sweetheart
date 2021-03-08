@@ -212,7 +212,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 				upsert := true
 				details.Profile = User{
 					About:         "I'm absolutely amazing!",
-					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing abviously!", details.Username),
+					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing obviously!", details.Username),
 					FavoriteColor: 0xffffff,
 					Socials:       []Social{},
 					Timezone:      "CET",
@@ -243,7 +243,76 @@ func (ws *Webserver) schema() *graphql.Schema {
 	}
 	rootQuery := graphql.ObjectConfig{Name: "Query", Fields: queryFields}
 
-	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	mutationFields := graphql.Fields{
+		"profile": &graphql.Field{
+			Type: graphql.Boolean,
+			Args: graphql.FieldConfigArgument{
+				"session": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"about": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"description": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"favorite_color": &graphql.ArgumentConfig{
+					Type: graphql.Int,
+				},
+				"timezone": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"country": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"gender": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"pronouns": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+				"sexuality": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+			},
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				session := p.Args["session"].(string)
+				details, err := ws.getUserDetails(session)
+				if err != nil {
+					return nil, err
+				}
+
+				profile := User{
+					About:         p.Args["session"].(string),
+					Description:   p.Args["session"].(string),
+					FavoriteColor: p.Args["session"].(int),
+					Timezone:      p.Args["session"].(string),
+					Country:       p.Args["session"].(string),
+					Gender:        p.Args["session"].(string),
+					Pronouns:      p.Args["session"].(string),
+					Sexuality:     p.Args["session"].(string),
+				}
+
+				collection, err := ws.getCollection("users")
+				if err != nil {
+					return nil, err
+				}
+
+				_, err = collection.UpdateOne(context.Background(), bson.M{
+					"id": details.ID,
+				}, bson.M{
+					"profile": profile,
+				})
+				return nil, err
+			},
+		},
+	}
+	rootMutation := graphql.ObjectConfig{Name: "Mutation", Fields: mutationFields}
+
+	schemaConfig := graphql.SchemaConfig{
+		Query:    graphql.NewObject(rootQuery),
+		Mutation: graphql.NewObject(rootMutation),
+	}
 	schema, err := graphql.NewSchema(schemaConfig)
 	if err != nil {
 		logging.Warn("failed to create new schema, error: %v", err)
