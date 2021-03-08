@@ -319,7 +319,9 @@ func (ws *Webserver) schema() *graphql.Schema {
 				_, err = collection.UpdateOne(context.Background(), bson.M{
 					"id": details.ID,
 				}, bson.M{
-					"profile": profile,
+					"$set": bson.M{
+						"profile": profile,
+					},
 				})
 				return true, err
 			},
