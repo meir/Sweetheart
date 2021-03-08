@@ -76,7 +76,10 @@ func (ws *Webserver) identity() *graphql.Object {
 			"picture": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					details := p.Source.(DiscordDetails)
+					details := p.Source.(*DiscordDetails)
+					if details == nil {
+						return nil, nil
+					}
 					return fmt.Sprintf("https://cdn.discordapp.com/avatars/%v/%v", details.ID, details.Avatar), nil
 				},
 			},
