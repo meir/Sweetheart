@@ -631,3 +631,20 @@ button.cancel:hover {
     outline: none;
     padding-top: 8px;
 }
+
+#notification {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 200px;
+    min-height: 50px;
+    padding: 14px;
+    border-radius: 3px;
+    color: white;
+    background-color: #7289da;
+    margin: 10px;
+    font-family: 'Discord';
+    max-width: 300px;
+    word-break: break-word;
+    transition: opacity .2s ease-in-out;
+}

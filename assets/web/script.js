@@ -40,14 +40,14 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = false
+const force_auth = true
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
     picture: "/images/sweetheart.png",
     profile: {
         about: "I'm absolutely amazing!",
-        description: "Hi, i'm **Sweetheart** and i'm absolutely amazing *obviously*!",
+        description: "Hi, i'm **Sweetheart**!\nAnd i'm absolutely amazing *obviously*!",
         favorite_color: 0xffffff,
         socials: [
             {
@@ -181,7 +181,7 @@ function updatePreview() {
                 prv = elem.getAttribute('preview-tmpl').replace('%v', prv)
             }
             if(elem.getAttribute('raw') === 'true') {
-                elem.innerText = prv
+                elem.innerHTML = prv
                 continue
             }
             if(elem.tagName.toLowerCase() === "input") {
@@ -248,5 +248,23 @@ function save() {
         variables: Object.assign(user.profile, {
             timezone: new Date().getTimezoneOffset()
         })
-    })).then(console.log)
+    })).then(r => {
+        if(r.data.profile) {
+            notify("Saved profile!")
+        }else{
+            notify("Failed to save profile! A warning has been sent to the developer about the issue!")
+        }
+    })
+}
+
+let notif = null
+
+function notify(message) {
+    document.getElementById("notification").innerHTML = message
+    document.getElementById("notification").style.opacity = 1
+    if(notif) clearTimeout(notif)
+    
+    notif = setTimeout(() => {
+        document.getElementById("notification").style.opacity = 0
+    }, 5000)
 }
