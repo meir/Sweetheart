@@ -19,7 +19,7 @@ func commands(meta commandeer.Meta, command string, arguments []string) bool {
 
 	output := []string{}
 	for k, v := range meta.Commands {
-		spaces := len(k) - long
+		spaces := long - len(k)
 		output = append(output, fmt.Sprintf("%v%v : %v", k, strings.Repeat(" ", spaces), v))
 	}
 
