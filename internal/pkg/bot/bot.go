@@ -57,6 +57,7 @@ func NewBot(st map[settings.BotSetting]string) (*DiscordBot, error) {
 		dialogue.NewDialogueGenerator(st),
 		database,
 		map[string]bool{},
+		map[string]string{},
 	}
 
 	return &DiscordBot{

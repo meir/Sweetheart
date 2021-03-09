@@ -13,4 +13,5 @@ type Meta struct {
 	DialogueGenerator *dialogue.DialogueGenerator
 	Database          *mongo.Client
 	Status            map[string]bool
+	Commands          map[string]string
 }

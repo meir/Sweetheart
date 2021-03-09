@@ -1,11 +1,13 @@
 package commandeer
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/meta"
+	"github.com/meir/Sweetheart/internal/pkg/settings"
 )
 
 type Commandeer struct {
@@ -41,7 +43,7 @@ func NewCommandeer(prefix string, meta *meta.Meta) *Commandeer {
 	}
 }
 
-func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments, usage string) {
+func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments, usage string, description string) {
 	c.commands[strings.ToLower(command)] = struct {
 		cmd   Command
 		arg   Arguments
@@ -51,6 +53,7 @@ func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments, usa
 		arg:   arguments,
 		usage: usage,
 	}
+	c.meta.Commands[fmt.Sprintf("%v%v %v", c.meta.Settings[settings.PREFIX], strings.ToLower(command), usage)] = description
 }
 
 func (c *Commandeer) Start(session *discordgo.Session) {
