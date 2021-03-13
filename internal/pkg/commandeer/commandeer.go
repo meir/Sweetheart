@@ -53,7 +53,9 @@ func (c *Commandeer) Apply(command string, cmd Command, arguments Arguments, usa
 		arg:   arguments,
 		usage: usage,
 	}
-	c.meta.Commands[fmt.Sprintf("%v%v %v", c.meta.Settings[settings.PREFIX], strings.ToLower(command), usage)] = description
+	if !arguments.Hidden {
+		c.meta.Commands[fmt.Sprintf("%v%v %v", c.meta.Settings[settings.PREFIX], strings.ToLower(command), usage)] = description
+	}
 }
 
 func (c *Commandeer) Start(session *discordgo.Session) {

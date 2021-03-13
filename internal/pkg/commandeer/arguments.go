@@ -5,4 +5,5 @@ type Arguments struct {
 	Max     int
 	Any     bool
 	Amounts []int
+	Hidden  bool
 }

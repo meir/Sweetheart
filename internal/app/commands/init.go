@@ -17,6 +17,7 @@ func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("about", about, commandeer.Arguments{Min: 0, Max: 1}, "(user mention)", "Shows a profile of a user, also includes their time right now :)")
 	sweetheart.Commandeer.Apply("commands", commands, commandeer.Arguments{Any: true}, "", "This!")
 	sweetheart.Commandeer.Apply("help", commands, commandeer.Arguments{Any: true}, "", fmt.Sprintf("Same as %vcommands", sweetheart.Meta.Settings[settings.PREFIX]))
+	sweetheart.Commandeer.Apply("boop", boop, commandeer.Arguments{Amounts: []int{1}, Hidden: true}, "[1/2/3]", "boop")
 
 	sweetheart.Commandeer.FailedArguments = failedArguments
 }
