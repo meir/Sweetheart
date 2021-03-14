@@ -60,7 +60,7 @@ func (ws *Webserver) settings() *graphql.Object {
 
 func (ws *Webserver) social() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
-		Name: "Social",
+		Name: "SocialObject",
 		Fields: graphql.Fields{
 			"name": &graphql.Field{
 				Type: graphql.String,
