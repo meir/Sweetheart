@@ -204,7 +204,7 @@ function updatePreview() {
                 elem.value = prv
                 continue
             }
-            if(elem.value) {
+            if(elem.tagName.toLocaleLowerCase() === "input") {
                 elem.value = prv
                 continue
             }
