@@ -58,17 +58,19 @@ func (ws *Webserver) settings() *graphql.Object {
 	})
 }
 
-var social = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Social",
-	Fields: graphql.Fields{
-		"name": &graphql.Field{
-			Type: graphql.String,
+func (ws *Webserver) social() *graphql.Object {
+	return graphql.NewObject(graphql.ObjectConfig{
+		Name: "Social",
+		Fields: graphql.Fields{
+			"name": &graphql.Field{
+				Type: graphql.String,
+			},
+			"handle": &graphql.Field{
+				Type: graphql.String,
+			},
 		},
-		"handle": &graphql.Field{
-			Type: graphql.String,
-		},
-	},
-})
+	})
+}
 
 func (ws *Webserver) identity() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
@@ -142,7 +144,7 @@ func (ws *Webserver) profile() *graphql.Object {
 				Type: graphql.Int,
 			},
 			"socials": &graphql.Field{
-				Type: graphql.NewList(social),
+				Type: graphql.NewList(ws.social()),
 			},
 			"timezone": &graphql.Field{
 				Type: graphql.Int,
@@ -308,7 +310,23 @@ func (ws *Webserver) schema() *graphql.Schema {
 				},
 				"socials": &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
-						OfType: social,
+						OfType: &graphql.List{
+							OfType: graphql.NewInputObject(graphql.InputObjectConfig{
+								Name: "Social",
+								Fields: graphql.InputObjectConfigFieldMap{
+									"name": &graphql.InputObjectFieldConfig{
+										Type: &graphql.NonNull{
+											OfType: graphql.String,
+										},
+									},
+									"handle": &graphql.InputObjectFieldConfig{
+										Type: &graphql.NonNull{
+											OfType: graphql.String,
+										},
+									},
+								},
+							}),
+						},
 					},
 				},
 				"timezone": &graphql.ArgumentConfig{
