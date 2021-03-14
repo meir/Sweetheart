@@ -315,14 +315,10 @@ func (ws *Webserver) schema() *graphql.Schema {
 								Name: "Social",
 								Fields: graphql.InputObjectConfigFieldMap{
 									"name": &graphql.InputObjectFieldConfig{
-										Type: &graphql.NonNull{
-											OfType: graphql.String,
-										},
+										Type: graphql.String,
 									},
 									"handle": &graphql.InputObjectFieldConfig{
-										Type: &graphql.NonNull{
-											OfType: graphql.String,
-										},
+										Type: graphql.String,
 									},
 								},
 							}),
