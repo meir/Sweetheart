@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = true
+const force_auth = false
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
@@ -103,7 +103,7 @@ window.onload = () => {
     }
     if(localStorage.discord_session) {
         console.log('authenticated')
-        graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color timezone country gender pronouns sexuality } } countries { name flag }}`).then(r => {
+        graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color socials timezone country gender pronouns sexuality } } countries { name flag }}`).then(r => {
             user = r.data.identity
             countries = r.data.countries
             authenticated()
