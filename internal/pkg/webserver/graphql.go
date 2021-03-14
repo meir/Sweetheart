@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"reflect"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -364,13 +363,21 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return false, fmt.Errorf("%v is not a usable country", country)
 				}
 
-				logging.Debug(reflect.TypeOf(p.Args["socials"]).Name())
+				var socials []Social
+				var socialsRaw = p.Args["socials"].([]map[string]string)
+				for i := 0; i < len(socialsRaw); i++ {
+					socials = append(socials, Social{
+						Name:   socialsRaw[i]["name"],
+						Handle: socialsRaw[i]["handle"],
+					})
+				}
+
 				profile := User{
 					About:         p.Args["about"].(string),
 					Description:   p.Args["description"].(string),
 					FavoriteColor: p.Args["favorite_color"].(int),
 					Timezone:      p.Args["timezone"].(int),
-					Socials:       p.Args["socials"].([]Social),
+					Socials:       socials,
 					Country:       country,
 					Gender:        p.Args["gender"].(string),
 					Pronouns:      p.Args["pronouns"].(string),
