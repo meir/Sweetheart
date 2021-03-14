@@ -766,3 +766,10 @@ button.cancel:hover {
     height: 20px;
     margin: auto auto;
 }
+
+.d-emoji {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    vertical-align: bottom;
+}
