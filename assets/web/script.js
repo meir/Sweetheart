@@ -255,7 +255,10 @@ function getDetail(path) {
 }
 
 function reset() {
-    authenticated()
+    graphql(`{identity(session: "${localStorage.discord_session}") { username discriminator picture profile{ about description favorite_color socials { name handle } timezone country gender pronouns sexuality } } }`).then(r => {
+        user = r.data.identity
+        authenticated()
+    })
 }
 
 function updateValue(el, path) {
