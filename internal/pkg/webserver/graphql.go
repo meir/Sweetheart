@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -363,6 +364,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return false, fmt.Errorf("%v is not a usable country", country)
 				}
 
+				logging.Debug(reflect.TypeOf(p.Args["socials"]).Name())
 				profile := User{
 					About:         p.Args["about"].(string),
 					Description:   p.Args["description"].(string),
