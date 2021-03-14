@@ -201,6 +201,7 @@ function updatePreview() {
             }
             if(elem.getAttribute('raw') === 'true') {
                 elem.innerHTML = prv
+                elem.value = prv
                 continue
             }
             if(elem.value) {

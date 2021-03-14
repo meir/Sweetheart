@@ -516,6 +516,7 @@ div.save {
     -ms-flex-direction: row-reverse;
     flex-direction: row-reverse;
     outline: none;
+    margin-top: 8px;
 }
 
 button.done {
