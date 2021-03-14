@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"reflect"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -367,11 +366,16 @@ func (ws *Webserver) schema() *graphql.Schema {
 				var socials []Social
 				var socialsRaw = p.Args["socials"].([]interface{})
 				for i := 0; i < len(socialsRaw); i++ {
-					logging.Debug(reflect.TypeOf(socialsRaw[i]))
-					if v, ok := socialsRaw[i].(map[string]string); ok {
+					if v, ok := socialsRaw[i].(map[string]interface{}); ok {
+						if _, ok := v["name"]; !ok {
+							continue
+						}
+						if _, ok := v["handle"]; !ok {
+							continue
+						}
 						socials = append(socials, Social{
-							Name:   v["name"],
-							Handle: v["handle"],
+							Name:   v["name"].(string),
+							Handle: v["handle"].(string),
 						})
 					}
 				}
