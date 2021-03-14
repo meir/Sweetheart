@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	"github.com/graphql-go/graphql"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
@@ -364,12 +365,15 @@ func (ws *Webserver) schema() *graphql.Schema {
 				}
 
 				var socials []Social
-				var socialsRaw = p.Args["socials"].([]map[string]string)
+				var socialsRaw = p.Args["socials"].([]interface{})
 				for i := 0; i < len(socialsRaw); i++ {
-					socials = append(socials, Social{
-						Name:   socialsRaw[i]["name"],
-						Handle: socialsRaw[i]["handle"],
-					})
+					logging.Debug(reflect.TypeOf(socialsRaw[i]))
+					if v, ok := socialsRaw[i].(map[string]string); ok {
+						socials = append(socials, Social{
+							Name:   v["name"],
+							Handle: v["handle"],
+						})
+					}
 				}
 
 				profile := User{
