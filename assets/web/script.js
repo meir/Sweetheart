@@ -85,6 +85,7 @@ const dummy_countries = [
 
 let user = {}
 let countries = []
+let picker = null
 
 window.onload = () => {
     document.getElementById("main").setAttribute('style', 'background-image: url(/images/Space_parallax.png)')
@@ -92,6 +93,25 @@ window.onload = () => {
     graphql(query).then(r => {
         document.getElementById('login').setAttribute('href', r.data.settings.oauth)
         document.getElementById('invite').setAttribute('href', r.data.settings.invite)
+    })
+    
+    picker = Pickr.create({
+        el: '#preview-color',
+        theme: 'nano',
+        default: '#fff',
+        components: {
+            preview: true,
+            hue: true,
+            interaction: {
+                hex: true,
+                input: true,
+                save: true,
+            }
+        }
+    })
+    picker.on('save', (color, instance) => {
+        user.profile.favorite_color = parseInt(color.toHEXA().join(""), 16)
+        updatePreview()
     })
     
     if(force_auth) {
@@ -128,24 +148,8 @@ function authenticated() {
     document.getElementById('embed').style.display = 'grid'
     document.getElementById('login').style.display = 'none'
     document.getElementById('inputs').style.display = 'grid'
-    let picker = Pickr.create({
-        el: '#preview-color',
-        theme: 'nano',
-        default: `#${user.profile.favorite_color.toString(16)}`,
-        components: {
-            preview: true,
-            hue: true,
-            interaction: {
-                hex: true,
-                input: true,
-                save: true,
-            }
-        }
-    })
-    picker.on('save', (color, instance) => {
-        user.profile.favorite_color = parseInt(color.toHEXA().join(""), 16)
-        updatePreview()
-    })
+    
+    picker.setColor(`#${user.profile.favorite_color.toString(16)}`)
     
     countries.sort((a, b) => a.name.localeCompare(b.name))
     
