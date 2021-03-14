@@ -67,7 +67,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 		socials += fmt.Sprintf("> __%v:__ %v\n", v.Name, v.Handle)
 	}
 	if socials == "" {
-		socials = "no socials."
+		socials = "> no socials."
 	}
 
 	embed := &discordgo.MessageEmbed{

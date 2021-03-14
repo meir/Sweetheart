@@ -19,20 +19,50 @@
 					<h1>Sweetheart</h1>
 				</div>
                 <div id="inputs" style="display:none">
-					<label for="input-bio">Bio</label>
-					<input placeholder="Bio" id="input-bio" type="text" class="preview" preview="profile.about" oninput="updateValue(this, 'bio')">
-					<label for="preview-color">Favorite Color</label>
-					<div id="preview-color"></div>
-					<label for="preview-country">Country</label>
-					<select id="preview-country" placeholder="Country" onchange="updateValue(this, 'country')"></select>
-					<label for="input-description">Description</label>
-					<textarea style="resize: none;" placeholder="Description" id="input-description" type="text" class="preview" preview="profile.description" raw="true" oninput="updateValue(this, 'description')"></textarea>
-					<label for="input-sexuality">Sexuality</label>
-					<input placeholder="Sexuality" id="input-sexuality" type="text" class="preview" preview="profile.sexuality" oninput="updateValue(this, 'sexuality')">
-					<label for="input-gender">Gender</label>
-					<input placeholder="Gender" id="input-gender" type="text" class="preview" preview="profile.gender" oninput="updateValue(this, 'gender')">
-					<label for="input-pronouns">Pronouns</label>
-					<input placeholder="Pronouns" id="input-pronouns" type="text" class="preview" preview="profile.pronouns" oninput="updateValue(this, 'pronouns')">
+					<div class="scroll">
+						<label for="input-bio">Bio</label>
+						<input placeholder="Bio" id="input-bio" type="text" class="preview" preview="profile.about" oninput="updateValue(this, 'bio')">
+						<label for="preview-color">Favorite Color</label>
+						<div id="preview-color"></div>
+						<label for="preview-country">Country</label>
+						<select id="preview-country" placeholder="Country" onchange="updateValue(this, 'country')"></select>
+						<label for="input-description">Description</label>
+						<textarea style="resize: none;" placeholder="Description" id="input-description" type="text" class="preview" preview="profile.description" raw="true" oninput="updateValue(this, 'description')"></textarea>
+						
+						<label for="input-description">Socials</label>
+						<ul id="socials-preview">
+							<li>
+								<div>
+									<u>Discord:</u>
+									<span> Sweetheart#1857</span>
+								</div>
+								<button>
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+										<line x1="3" x2="17" y1="10" y2="10" stroke="rgb(220, 221, 222)" stroke-width="2" stroke-linecap="round"></line>
+									</svg>
+								</button>
+							</li>
+						</ul>
+						<ul id="socials">
+							<li>
+								<input id="preview-social-name" type="text" placeholder="Platform">
+								<input id="preview-social-handle" type="text" placeholder="Handle">
+								<button onclick="addSocial()">
+									<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+										<line x1="3" x2="17" y1="10" y2="10" stroke="rgb(220, 221, 222)" stroke-width="2" stroke-linecap="round"></line>
+										<line y1="3" y2="17" x1="10" x2="10" stroke="rgb(220, 221, 222)" stroke-width="2" stroke-linecap="round"></line>
+									</svg>
+								</button>
+							</li>
+						</ul>
+						
+						<label for="input-sexuality">Sexuality</label>
+						<input placeholder="Sexuality" id="input-sexuality" type="text" class="preview" preview="profile.sexuality" oninput="updateValue(this, 'sexuality')">
+						<label for="input-gender">Gender</label>
+						<input placeholder="Gender" id="input-gender" type="text" class="preview" preview="profile.gender" oninput="updateValue(this, 'gender')">
+						<label for="input-pronouns">Pronouns</label>
+						<input placeholder="Pronouns" id="input-pronouns" type="text" class="preview" preview="profile.pronouns" oninput="updateValue(this, 'pronouns')">
+					</div>
 					<div class="save">
 						<button class="done" onclick="save()">Done</button>
 						<button class="cancel" onclick="reset()">Cancel</button>

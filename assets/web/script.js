@@ -26,7 +26,7 @@ window.bg_last = 0;
 })()
 
 window.onmousemove = (e) => {
-    const speed = 20
+    const speed = 10
     let x = e.clientX / speed
     window.bg_towards = x
 }
@@ -40,7 +40,7 @@ async function graphql(body) {
     }).then(async r => await r.json())
 }
 
-const force_auth = false
+const force_auth = true
 const dummy = {
     username: "Sweetheart",
     discriminator: "1857",
@@ -161,6 +161,21 @@ function authenticated() {
     updatePreview()
 }
 
+/*
+"__NAME:__ HANDLE"
+
+<li>
+	<div>
+	    {MD}
+	</div>
+	<button onclick="removeSocial({INDEX})">
+		<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
+		    <line x1="3" x2="17" y1="10" y2="10" stroke="rgb(220, 221, 222)" stroke-width="2" stroke-linecap="round"></line>
+		</svg>
+	</button>
+</li>
+*/
+
 function updatePreview() {
     user.profile.timezone = new Date().toTimeString().substring(0, 5)
     const elems = document.getElementsByClassName("preview")
@@ -193,14 +208,29 @@ function updatePreview() {
     }
     
     const elem = document.getElementById("preview-socials")
+    const socPrev = document.getElementById("socials-preview")
+    socPrev.innerHTML = ''
     let social = ''
     if(!user.profile.socials) return
+    if(user.profile.socials.length == 0) {
+        elem.innerHTML = 'no socials.'
+        return
+    }
     for(let i = 0; i < user.profile.socials.length; i++) {
         let s = user.profile.socials[i]
         social += `> __${s.name}:__ ${s.handle}\n`
+        let li = document.createElement("li")
+        let button = document.createElement("button")
+        let div = document.createElement("div")
+        div.innerHTML = discordMarkdown.toHTML(`__${s.name}:__ ${s.handle}`)
+        button.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"><line x1="3" x2="17" y1="10" y2="10" stroke="rgb(220, 221, 222)" stroke-width="2" stroke-linecap="round"></line></svg>`
+        button.setAttribute('onclick', `deleteSocial(${i})`)
+        li.appendChild(div)
+        li.appendChild(button)
+        socPrev.appendChild(li)
     }
-    elem.innerHTML = discordMarkdown.toHTML(social)
     
+    elem.innerHTML = discordMarkdown.toHTML(social)
 }
 
 function getDetail(path) {
@@ -238,6 +268,7 @@ function save() {
                     about: $about  
                     description: $description 
                     favorite_color: $favorite_color 
+                    socials: $socials
                     timezone: $timezone 
                     gender: $gender 
                     pronouns: $pronouns 
@@ -267,4 +298,27 @@ function notify(message) {
     notif = setTimeout(() => {
         document.getElementById("notification").style.opacity = 0
     }, 5000)
+}
+
+function addSocial() {
+    let name = document.getElementById("preview-social-name")
+    let handle = document.getElementById("preview-social-handle")
+    if(!(name.value.length > 0 && handle.value.length > 0)) return
+    user.profile.socials.push({
+        name: name.value.trim(),
+        handle: handle.value.trim()
+    })
+    name.value = ""
+    handle.value = ""
+    updatePreview()
+}
+
+function deleteSocial(index) {
+    delete user.profile.socials[index]
+    let n = []
+    for(let i = 0; i < user.profile.socials.length; i++) {
+        if(user.profile.socials[i]) n.push(user.profile.socials[i])
+    }
+    user.profile.socials = n
+    updatePreview()
 }

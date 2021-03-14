@@ -58,6 +58,20 @@ func (ws *Webserver) settings() *graphql.Object {
 	})
 }
 
+func (ws *Webserver) social() *graphql.Object {
+	return graphql.NewObject(graphql.ObjectConfig{
+		Name: "Social",
+		Fields: graphql.Fields{
+			"name": &graphql.Field{
+				Type: graphql.String,
+			},
+			"handle": &graphql.Field{
+				Type: graphql.String,
+			},
+		},
+	})
+}
+
 func (ws *Webserver) identity() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
 		Name: "Identity",
@@ -129,9 +143,9 @@ func (ws *Webserver) profile() *graphql.Object {
 			"favorite_color": &graphql.Field{
 				Type: graphql.Int,
 			},
-			// "socials": &graphql.Field{
-			// 	Type: graphql.String,
-			// },
+			"socials": &graphql.Field{
+				Type: graphql.NewList(ws.social()),
+			},
 			"timezone": &graphql.Field{
 				Type: graphql.Int,
 			},
@@ -294,6 +308,11 @@ func (ws *Webserver) schema() *graphql.Schema {
 						OfType: graphql.Int,
 					},
 				},
+				"socials": &graphql.ArgumentConfig{
+					Type: &graphql.NonNull{
+						OfType: ws.social(),
+					},
+				},
 				"timezone": &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
 						OfType: graphql.Int,
@@ -337,6 +356,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					Description:   p.Args["description"].(string),
 					FavoriteColor: p.Args["favorite_color"].(int),
 					Timezone:      p.Args["timezone"].(int),
+					Socials:       p.Args["socials"].([]Social),
 					Country:       country,
 					Gender:        p.Args["gender"].(string),
 					Pronouns:      p.Args["pronouns"].(string),
