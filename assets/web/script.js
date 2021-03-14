@@ -203,7 +203,7 @@ function updatePreview() {
                 elem.innerHTML = prv
                 continue
             }
-            if(elem.tagName.toLowerCase() === "input" || elem.tagName.toLowerCase() === "textarea") {
+            if(elem.value) {
                 elem.value = prv
                 continue
             }
