@@ -786,6 +786,7 @@ button.cancel:hover {
     
     .pane-right {
         width: 100%;
+        height: fit-content;
     }
     
     .main-preview {
@@ -796,5 +797,10 @@ button.cancel:hover {
     
     #footer {
         width: initial;
+    }
+    
+    #main {
+        height: fit-content;
+        display: contents;
     }
 }
