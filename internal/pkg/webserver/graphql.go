@@ -58,19 +58,17 @@ func (ws *Webserver) settings() *graphql.Object {
 	})
 }
 
-func (ws *Webserver) social() *graphql.Object {
-	return graphql.NewObject(graphql.ObjectConfig{
-		Name: "Social",
-		Fields: graphql.Fields{
-			"name": &graphql.Field{
-				Type: graphql.String,
-			},
-			"handle": &graphql.Field{
-				Type: graphql.String,
-			},
+var social = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Social",
+	Fields: graphql.Fields{
+		"name": &graphql.Field{
+			Type: graphql.String,
 		},
-	})
-}
+		"handle": &graphql.Field{
+			Type: graphql.String,
+		},
+	},
+})
 
 func (ws *Webserver) identity() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
@@ -144,7 +142,7 @@ func (ws *Webserver) profile() *graphql.Object {
 				Type: graphql.Int,
 			},
 			"socials": &graphql.Field{
-				Type: graphql.NewList(ws.social()),
+				Type: graphql.NewList(social),
 			},
 			"timezone": &graphql.Field{
 				Type: graphql.Int,
@@ -310,7 +308,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 				},
 				"socials": &graphql.ArgumentConfig{
 					Type: &graphql.NonNull{
-						OfType: ws.social(),
+						OfType: social,
 					},
 				},
 				"timezone": &graphql.ArgumentConfig{
@@ -387,7 +385,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 	}
 	schema, err := graphql.NewSchema(schemaConfig)
 	if err != nil {
-		logging.Warn("failed to create new schema, error: %v", err)
+		logging.Warn("failed to create new schema, error: ", err)
 	}
 	return &schema
 }
