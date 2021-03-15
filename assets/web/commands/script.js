@@ -42,7 +42,7 @@ let commands = []
 window.onload = () => {
     document.getElementById("main").setAttribute('style', 'background-image: url(/images/Space_parallax.png)')
     graphql(`query{ commands { name description } }`).then(r => {
-        commands = r.commands
+        commands = r.data.commands
         updateView()
     })
 }
