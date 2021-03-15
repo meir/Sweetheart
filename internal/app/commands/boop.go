@@ -15,7 +15,7 @@ import (
 )
 
 func boop(meta commandeer.Meta, command string, arguments []string) bool {
-	if meta.Message.Author.ID != "213603030384377856" {
+	if meta.IsAdmin(meta.Message.Author.ID) {
 		return true
 	}
 	images := []string{
