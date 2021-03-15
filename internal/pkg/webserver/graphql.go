@@ -205,6 +205,29 @@ func (ws *Webserver) schema() *graphql.Schema {
 				return base64.StdEncoding.EncodeToString(data), err
 			},
 		},
+		"commands": &graphql.Field{
+			Type: graphql.NewList(graphql.NewObject(graphql.ObjectConfig{
+				Name: "Command",
+				Fields: graphql.Fields{
+					"name": &graphql.Field{
+						Type: graphql.String,
+					},
+					"description": &graphql.Field{
+						Type: graphql.String,
+					},
+				},
+			})),
+			Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+				output := []map[string]string{}
+				for k, v := range ws.Meta.Commands {
+					output = append(output, map[string]string{
+						"name":        k,
+						"description": v,
+					})
+				}
+				return output, nil
+			},
+		},
 		"countries": &graphql.Field{
 			Type: graphql.NewList(graphql.NewObject(graphql.ObjectConfig{
 				Name: "Country",
