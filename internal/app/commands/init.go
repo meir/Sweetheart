@@ -18,6 +18,7 @@ func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("commands", commands, commandeer.Arguments{Any: true}, "", "This!")
 	sweetheart.Commandeer.Apply("help", commands, commandeer.Arguments{Any: true}, "", fmt.Sprintf("Same as %vcommands", sweetheart.Meta.Settings[settings.PREFIX]))
 	sweetheart.Commandeer.Apply("boop", boop, commandeer.Arguments{Amounts: []int{1}, Hidden: true}, "[1/2/3]", "boop")
+	sweetheart.Commandeer.Apply("buttpoems", buttpoem, commandeer.Arguments{Any: true}, "", "Returns a buttpoem from https://buttpoems.tumblr.com/random")
 
 	sweetheart.Commandeer.FailedArguments = failedArguments
 }
