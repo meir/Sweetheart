@@ -34,13 +34,13 @@ func buttpoem(meta commandeer.Meta, command string, arguments []string) bool {
 		}
 		url := resp.Request.URL.String()
 		match := buttpoems_regex.FindStringSubmatch(string(d))
-		if len(match) > 0 {
+		if len(match) >= 2 {
 			_, err := meta.Session.ChannelMessageSendEmbed(meta.Message.ChannelID, &discordgo.MessageEmbed{
 				URL:   url,
 				Type:  discordgo.EmbedTypeImage,
 				Title: "ButtPoems",
 				Image: &discordgo.MessageEmbedImage{
-					URL: match[0],
+					URL: match[1],
 				},
 			})
 			if err != nil {
