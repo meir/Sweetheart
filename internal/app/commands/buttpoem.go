@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -48,6 +49,9 @@ func buttpoem(meta commandeer.Meta, command string, arguments []string) bool {
 				return false
 			}
 			return true
+		} else {
+			logging.Warn("No regex match has been found: ", fmt.Sprint(match))
+			return false
 		}
 	}
 	logging.Warn("Something went wrong while getting buttpoems, statuscode:", resp.StatusCode)
