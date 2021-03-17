@@ -35,7 +35,8 @@ steps:
       
         _OLD_IMAGES=$(gcloud container images list-tags gcr.io/${_PROJECT_ID}/sweetheart --format='get(tags)' | grep -v ";latest")
         
-        while IFS= read -r _LINE; do
+        echo "$_OLD_IMAGES" | while read -r _LINE; do
           _LINE=$(echo $_LINE|tr -d '\r')
           gcloud container images delete gcr.io/${_PROJECT_ID}/sweetheart:${_LINE} --quiet
-        done <<< "$_OLD_IMAGES"
+        done;
+        
