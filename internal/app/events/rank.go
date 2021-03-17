@@ -20,10 +20,6 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 			return
 		}
 
-		ranking := bson.M{}
-		ranking["ranks.global"] = 1
-		ranking[fmt.Sprintf("ranks.%v", msg.GuildID)] = 1
-
 		_, err = collection.UpdateOne(context.Background(), bson.M{
 			"id": msg.Author.ID,
 		}, bson.M{
@@ -36,7 +32,10 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 				"id":      msg.Author.ID,
 				"profile": nil,
 			},
-			"$inc": ranking,
+			"$inc": bson.M{
+				"ranks.global":                       1,
+				fmt.Sprintf("ranks.%v", msg.GuildID): 1,
+			},
 		}, &options.UpdateOptions{
 			Upsert: &upsert,
 		})
