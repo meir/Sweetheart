@@ -37,5 +37,5 @@ steps:
         
         while IFS= read -r LINE; do
           LINE=$(echo $LINE|tr -d '\r')
-          gcloud container images delete gcr.io/${_PROJECT_ID}/sweetheart:${LINE} --quiet
+          gcloud container images delete gcr.io/${_PROJECT_ID}/sweetheart:$LINE --quiet
         done <<< $OLD_IMG
