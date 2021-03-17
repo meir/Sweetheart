@@ -20,10 +20,8 @@ func rank(meta commandeer.Meta, command string, arguments []string) bool {
 	}
 
 	res, err := collection.Find(context.Background(), bson.M{
-		"ranks": bson.M{
-			meta.Message.GuildID: bson.M{
-				"$exists": true,
-			},
+		fmt.Sprintf("ranks.%v", meta.Message.GuildID): bson.M{
+			"$exists": true,
 		},
 	}, options.Find().SetProjection(bson.D{
 		{fmt.Sprintf("ranks.%v", meta.Message.GuildID), 1},
