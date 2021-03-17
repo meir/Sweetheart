@@ -21,10 +21,16 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 
 		ranking := bson.M{}
 		ranking["global"] = bson.M{
-			"$add": 1,
+			"$add": []interface{}{
+				"global",
+				1,
+			},
 		}
 		ranking[msg.GuildID] = bson.M{
-			"$add": 1,
+			"$add": []interface{}{
+				msg.GuildID,
+				1,
+			},
 		}
 
 		_, err = collection.UpdateOne(context.Background(), bson.M{
