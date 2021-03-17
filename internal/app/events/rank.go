@@ -2,6 +2,7 @@ package events
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/bot"
@@ -20,18 +21,8 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 		}
 
 		ranking := bson.M{}
-		ranking["global"] = bson.M{
-			"$add": []interface{}{
-				"global",
-				1,
-			},
-		}
-		ranking[msg.GuildID] = bson.M{
-			"$add": []interface{}{
-				msg.GuildID,
-				1,
-			},
-		}
+		ranking["ranks.global"] = 1
+		ranking[fmt.Sprintf("ranks.%v", msg.GuildID)] = 1
 
 		_, err = collection.UpdateOne(context.Background(), bson.M{
 			"ID": msg.Author.ID,
@@ -40,7 +31,7 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 				"username":      msg.Author.Username,
 				"avatar":        msg.Author.Avatar,
 				"discriminator": msg.Author.Discriminator,
-				"ranks":         ranking,
+				"$inc":          ranking,
 			},
 			"$setOnInsert": bson.M{
 				"id":      msg.Author.ID,
