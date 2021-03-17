@@ -25,3 +25,17 @@ steps:
         gcloud container clusters get-credentials "flamingo-master" --zone "europe-west4-a"
         
         kubectl rollout restart deployment deployment-sweetheart -n sweetheart
+
+  - id: cleanup
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+      
+        OLD_IMAGES=$(gcloud container images list-tags gcr.io/${_PROJECT_ID}/sweetheart --format='get(tags)' | grep -v ";latest")
+        
+        while IFS= read -r LINE; do
+          LINE=$(echo $LINE|tr -d '\r')
+          gcloud container images delete gcr.io/${_PROJECT_ID}/sweetheart:${LINE} --quiet
+        done <<< $OLD_IMG
