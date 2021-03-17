@@ -31,12 +31,12 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 				"username":      msg.Author.Username,
 				"avatar":        msg.Author.Avatar,
 				"discriminator": msg.Author.Discriminator,
-				"$inc":          ranking,
 			},
 			"$setOnInsert": bson.M{
 				"id":      msg.Author.ID,
 				"profile": nil,
 			},
+			"$inc": ranking,
 		}, &options.UpdateOptions{
 			Upsert: &upsert,
 		})
