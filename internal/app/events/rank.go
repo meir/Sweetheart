@@ -25,7 +25,7 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 		ranking[fmt.Sprintf("ranks.%v", msg.GuildID)] = 1
 
 		_, err = collection.UpdateOne(context.Background(), bson.M{
-			"ID": msg.Author.ID,
+			"id": msg.Author.ID,
 		}, bson.M{
 			"$set": bson.M{
 				"username":      msg.Author.Username,
