@@ -10,39 +10,12 @@ import (
 	"net/url"
 
 	"github.com/graphql-go/graphql"
+	"github.com/meir/Sweetheart/internal/pkg/data"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/settings"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-type User struct {
-	ImageID       string   `bson:"image_id"`
-	About         string   `bson:"about"`
-	Description   string   `bson:"description"`
-	FavoriteColor int      `json:"favorite_color" bson:"favorite_color"`
-	Socials       []Social `bson:"socials"`
-	Timezone      int      `bson:"timezone"`
-	Country       string   `bson:"country"`
-
-	Gender    string `bson:"gender"`
-	Pronouns  string `bson:"pronouns"`
-	Sexuality string `bson:"sexuality"`
-}
-
-type DiscordDetails struct {
-	ID            string `json:"id" bson:"id"`
-	Username      string `json:"username" bson:"username"`
-	Avatar        string `json:"avatar" bson:"avatar"`
-	Discriminator string `json:"discriminator" bson:"discriminator"`
-	Profile       User   `json:"user,omitempty" bson:"profile"`
-}
-
-type Social struct {
-	Name   string `bson:"name"`
-	Handle string `bson:"handle"`
-}
 
 func (ws *Webserver) settings() *graphql.Object {
 	return graphql.NewObject(graphql.ObjectConfig{
@@ -91,7 +64,7 @@ func (ws *Webserver) identity() *graphql.Object {
 			"picture": &graphql.Field{
 				Type: graphql.String,
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					details := p.Source.(*DiscordDetails)
+					details := p.Source.(*data.DiscordDetails)
 					if details == nil {
 						return nil, nil
 					}
@@ -101,11 +74,11 @@ func (ws *Webserver) identity() *graphql.Object {
 			"profile": &graphql.Field{
 				Type: ws.profile(),
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					details := p.Source.(*DiscordDetails)
+					details := p.Source.(*data.DiscordDetails)
 					if details == nil {
 						return nil, nil
 					}
-					collection, err := ws.getCollection("users")
+					collection, err := ws.Meta.GetCollection("users")
 					if err != nil {
 						return nil, err
 					}
@@ -115,7 +88,7 @@ func (ws *Webserver) identity() *graphql.Object {
 					if res == nil {
 						return nil, fmt.Errorf("no profiles found with id of %v", details.ID)
 					}
-					var profile DiscordDetails
+					var profile data.DiscordDetails
 					err = res.Decode(&profile)
 					if err != nil {
 						return nil, err
@@ -269,16 +242,16 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 
-				collection, err := ws.getCollection("users")
+				collection, err := ws.Meta.GetCollection("users")
 				if err != nil {
 					return nil, err
 				}
 				upsert := true
-				details.Profile = User{
+				details.Profile = &data.User{
 					About:         "I'm absolutely amazing!",
 					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing obviously!", details.Username),
 					FavoriteColor: 0xffffff,
-					Socials:       []Social{},
+					Socials:       []data.Social{},
 					Timezone:      -60,
 					Country:       "Netherlands",
 
@@ -287,7 +260,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					Sexuality: "???",
 				}
 				_, err = collection.UpdateOne(context.Background(), bson.M{
-					"ID": details.ID,
+					"id": details.ID,
 				}, bson.M{
 					"$set": bson.M{
 						"username":      details.Username,
@@ -386,7 +359,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return false, fmt.Errorf("%v is not a usable country", country)
 				}
 
-				var socials []Social
+				var socials []data.Social
 				var socialsRaw = p.Args["socials"].([]interface{})
 				for i := 0; i < len(socialsRaw); i++ {
 					if v, ok := socialsRaw[i].(map[string]interface{}); ok {
@@ -396,14 +369,14 @@ func (ws *Webserver) schema() *graphql.Schema {
 						if _, ok := v["handle"]; !ok {
 							continue
 						}
-						socials = append(socials, Social{
+						socials = append(socials, data.Social{
 							Name:   v["name"].(string),
 							Handle: v["handle"].(string),
 						})
 					}
 				}
 
-				profile := User{
+				profile := data.User{
 					About:         p.Args["about"].(string),
 					Description:   p.Args["description"].(string),
 					FavoriteColor: p.Args["favorite_color"].(int),
@@ -415,7 +388,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					Sexuality:     p.Args["sexuality"].(string),
 				}
 
-				collection, err := ws.getCollection("users")
+				collection, err := ws.Meta.GetCollection("users")
 				if err != nil {
 					return false, err
 				}
@@ -449,14 +422,14 @@ type Session struct {
 	TokenType   string `json:"token_type"`
 }
 
-func (ws *Webserver) getUserDetails(session string) (*DiscordDetails, error) {
-	data, err := base64.StdEncoding.DecodeString(session)
+func (ws *Webserver) getUserDetails(session string) (*data.DiscordDetails, error) {
+	dat, err := base64.StdEncoding.DecodeString(session)
 	if err != nil {
 		return nil, err
 	}
 
 	var ses Session
-	err = json.Unmarshal(data, &ses)
+	err = json.Unmarshal(dat, &ses)
 	if err != nil {
 		return nil, err
 	}
@@ -478,23 +451,10 @@ func (ws *Webserver) getUserDetails(session string) (*DiscordDetails, error) {
 		return nil, err
 	}
 
-	var details DiscordDetails
+	var details data.DiscordDetails
 	err = json.Unmarshal(det, &details)
 	if err != nil {
 		return nil, err
 	}
 	return &details, err
-}
-
-func (ws *Webserver) getCollection(name string) (*mongo.Collection, error) {
-	database := ws.Meta.Database.Database("sweetheart")
-	col := database.Collection(name)
-	if col == nil {
-		err := database.CreateCollection(context.Background(), name)
-		if err != nil {
-			return nil, err
-		}
-		col = database.Collection(name)
-	}
-	return col, nil
 }

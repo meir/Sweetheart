@@ -9,6 +9,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/commandeer"
+	"github.com/meir/Sweetheart/internal/pkg/data"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"github.com/meir/Sweetheart/internal/pkg/webserver"
 	"go.mongodb.org/mongo-driver/bson"
@@ -51,7 +52,7 @@ func about(meta commandeer.Meta, command string, arguments []string) bool {
 		return true
 	}
 
-	var details webserver.DiscordDetails
+	var details data.DiscordDetails
 	err := res.Decode(&details)
 	if err != nil {
 		logging.Warn("could not parse mongodb query to DiscordDetails.", err)

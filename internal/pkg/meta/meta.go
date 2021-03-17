@@ -1,6 +1,7 @@
 package meta
 
 import (
+	"context"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
@@ -26,4 +27,17 @@ func (m *Meta) IsAdmin(id string) bool {
 		}
 	}
 	return false
+}
+
+func (meta *Meta) GetCollection(name string) (*mongo.Collection, error) {
+	database := meta.Database.Database("sweetheart")
+	col := database.Collection(name)
+	if col == nil {
+		err := database.CreateCollection(context.Background(), name)
+		if err != nil {
+			return nil, err
+		}
+		col = database.Collection(name)
+	}
+	return col, nil
 }
