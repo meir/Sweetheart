@@ -20,6 +20,7 @@ func Initialize(sweetheart *bot.DiscordBot) {
 	sweetheart.Commandeer.Apply("boop", boop, commandeer.Arguments{Amounts: []int{1}, Hidden: true}, "[1/2/3]", "boop")
 	sweetheart.Commandeer.Apply("buttpoems", buttpoem, commandeer.Arguments{Any: true}, "", "Returns a buttpoem from https://buttpoems.tumblr.com/random")
 	sweetheart.Commandeer.Apply("rank", rank, commandeer.Arguments{Any: true}, "", "Shows your rank (WIP)")
+	sweetheart.Commandeer.Apply("servers", rank, commandeer.Arguments{Any: true, Hidden: true}, "", "Server list")
 
 	sweetheart.Commandeer.FailedArguments = failedArguments
 }
