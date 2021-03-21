@@ -15,7 +15,7 @@ func servers(meta commandeer.Meta, command string, arguments []string) bool {
 	servers := []string{}
 	count := 0
 	for _, v := range meta.Session.State.Guilds {
-		line := fmt.Sprintf("%v - %v", v.Name, v.IconURL())
+		line := fmt.Sprintf("%v - %v", v.Name, v.Description)
 		servers = append(servers, line)
 		count += len(line)
 		if count >= 1750 {
