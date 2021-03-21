@@ -6,6 +6,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/meir/Sweetheart/internal/pkg/bot"
+	"github.com/meir/Sweetheart/internal/pkg/data"
 	"github.com/meir/Sweetheart/internal/pkg/logging"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -30,7 +31,7 @@ func Message(sweetheart *bot.DiscordBot) func(session *discordgo.Session, guild 
 			},
 			"$setOnInsert": bson.M{
 				"id":      msg.Author.ID,
-				"profile": nil,
+				"profile": data.User{},
 			},
 			"$inc": bson.M{
 				"ranks.global":                       1,

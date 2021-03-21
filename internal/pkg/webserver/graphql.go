@@ -247,7 +247,7 @@ func (ws *Webserver) schema() *graphql.Schema {
 					return nil, err
 				}
 				upsert := true
-				details.Profile = &data.User{
+				details.Profile = data.User{
 					About:         "I'm absolutely amazing!",
 					Description:   fmt.Sprintf("Hi, i'm %v and i'm absolutely amazing obviously!", details.Username),
 					FavoriteColor: 0xffffff,

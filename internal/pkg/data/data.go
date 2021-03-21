@@ -19,8 +19,12 @@ type DiscordDetails struct {
 	Username      string            `json:"username" bson:"username"`
 	Avatar        string            `json:"avatar" bson:"avatar"`
 	Discriminator string            `json:"discriminator" bson:"discriminator"`
-	Profile       *User             `json:"user,omitempty" bson:"profile"`
+	Profile       User              `json:"user,omitempty" bson:"profile"`
 	Ranks         map[string]uint64 `json:"ranks,omitempty" bson:"ranks"`
+}
+
+func (d *DiscordDetails) Level(id string) (level, exp, max uint64) {
+	return 0, 0, 0
 }
 
 type Social struct {
