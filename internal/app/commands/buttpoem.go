@@ -37,7 +37,7 @@ func buttpoem(meta commandeer.Meta, command string, arguments []string) bool {
 		logging.Warn("Failed to send message", err)
 		return false
 	}
-	return false
+	return true
 }
 
 func getButtPoem() (url, img string, err error) {
