@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -16,44 +17,59 @@ const buttpoems_url = "https://buttpoems.tumblr.com/random"
 var buttpoems_regex = regexp.MustCompile(`<img class="post_media_photo image" src="([^"]*)" alt="image">`)
 
 func buttpoem(meta commandeer.Meta, command string, arguments []string) bool {
+
+	url, img, err := getButtPoem()
+	if err != nil {
+		for i := 0; i < 3 && err != nil; i++ {
+			url, img, err = getButtPoem()
+		}
+	}
+
+	_, err = meta.Session.ChannelMessageSendEmbed(meta.Message.ChannelID, &discordgo.MessageEmbed{
+		URL:   url,
+		Type:  discordgo.EmbedTypeImage,
+		Title: "ButtPoems",
+		Image: &discordgo.MessageEmbedImage{
+			URL: img,
+		},
+	})
+	if err != nil {
+		logging.Warn("Failed to send message", err)
+		return false
+	}
+	return false
+}
+
+func getButtPoem() (url, img string, err error) {
 	req, err := http.NewRequest(http.MethodGet, buttpoems_url, nil)
 	if err != nil {
 		logging.Warn("Failed to create new request to buttpoems", err)
-		return false
+		return
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		logging.Warn("Failed to call buttpoems", err)
-		return false
+		return
 	}
 	if resp.StatusCode == http.StatusOK {
-		d, err := ioutil.ReadAll(resp.Body)
+		var d []byte
+		d, err = ioutil.ReadAll(resp.Body)
 		if err != nil {
 			logging.Warn("Failed to read body of buttpoems", err)
-			return false
+			return
 		}
-		url := resp.Request.URL.String()
+		url = resp.Request.URL.String()
 		match := buttpoems_regex.FindStringSubmatch(string(d))
 		if len(match) >= 2 {
-			_, err := meta.Session.ChannelMessageSendEmbed(meta.Message.ChannelID, &discordgo.MessageEmbed{
-				URL:   url,
-				Type:  discordgo.EmbedTypeImage,
-				Title: "ButtPoems",
-				Image: &discordgo.MessageEmbedImage{
-					URL: match[1],
-				},
-			})
-			if err != nil {
-				logging.Warn("Failed to send message", err)
-				return false
-			}
-			return true
+			img = match[1]
+			return
 		} else {
 			logging.Warn("No regex match has been found: ", fmt.Sprint(match))
-			return false
+			err = errors.New("no regex matches")
+			return
 		}
 	}
-	logging.Warn("Something went wrong while getting buttpoems, statuscode:", resp.StatusCode)
-	return false
+	err = errors.New(fmt.Sprintf("Something went wrong while getting buttpoems, statuscode: %v", resp.StatusCode))
+	return
 }
