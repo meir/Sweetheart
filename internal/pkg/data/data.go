@@ -1,5 +1,7 @@
 package data
 
+import "math"
+
 type User struct {
 	ImageID       string   `bson:"image_id"`
 	About         string   `bson:"about"`
@@ -24,6 +26,11 @@ type DiscordDetails struct {
 }
 
 func (d *DiscordDetails) Level(id string) (level, exp, max uint64) {
+	if l, ok := d.Ranks[id]; ok {
+		level = uint64(math.Floor(math.Sqrt(float64(l))))
+		exp = l - level
+		max = uint64(math.Ceil(math.Sqrt(float64(l))))
+	}
 	return 0, 0, 0
 }
 

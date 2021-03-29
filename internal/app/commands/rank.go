@@ -46,16 +46,16 @@ func rank(meta commandeer.Meta, command string, arguments []string) bool {
 	})
 
 	rank := -1
-	var exp uint64 = 0
+	var level, exp, max uint64 = 0, 0, 0
 	for k, v := range users {
 		if v.ID == meta.Message.Author.ID {
 			rank = k + 1
-			exp = v.Ranks[meta.Message.GuildID]
+			level, exp, max = v.Level(meta.Message.GuildID)
 			break
 		}
 	}
 
-	_, err = meta.Session.ChannelMessageSend(meta.Message.ChannelID, fmt.Sprintf("Rank #%v EXP: %v", rank, exp))
+	_, err = meta.Session.ChannelMessageSend(meta.Message.ChannelID, fmt.Sprintf("Rank #%v Level: %v EXP: %v/%v", rank, level, exp, max))
 	if err != nil {
 		logging.Warn("Failed to send message", err)
 		return false
