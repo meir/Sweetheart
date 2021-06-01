@@ -19,6 +19,7 @@ type Commandeer struct {
 	}
 	FailedArguments Command
 	meta            *meta.Meta
+	Maintenance     bool
 }
 
 type Meta struct {
@@ -91,6 +92,14 @@ func (c *Commandeer) Run(session *discordgo.Session, msg *discordgo.Message) {
 			}
 			if len(cmd.arg.Amounts) > 0 {
 				goto failed
+			}
+			if c.meta.Settings[settings.MAINTENANCE] == "true" && !c.meta.IsAdmin(msg.Author.ID) {
+				_, err := session.ChannelMessageSend(msg.ChannelID, "Sorry, but im currently in maintenance mode.")
+				if err != nil {
+					logging.Warn("Failed to send message", err)
+					return
+				}
+				return
 			}
 
 		accepted:
