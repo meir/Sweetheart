@@ -7,3 +7,5 @@ It would also feature some random commands just to test the capabilities of what
 
 Contained a webserver using GraphQL and MongoDB as storage.
 Needed a rework to make the GraphQL code more readable and the controllers for it more consistent with data between the webserver and the discord bot.
+
+The images and name for this bot are from [Omori](https://store.steampowered.com/app/1150690/OMORI/)
